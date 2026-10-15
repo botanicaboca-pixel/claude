@@ -1,0 +1,501 @@
+<title>Radar 3.5 wobec raportu 5.1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: jedna kolumna tekstu ~70 znaków, szerokie tabele w przewijanych ramkach; paleta i kroje z raportu 3.5 */
+:root{
+  --bg:#f3f4f1; --surface:#fcfcfb; --surface-2:#eaece6; --ink:#13171b; --ink-2:#474c52; --muted:#6c706c;
+  --line:#dcded7; --line-2:#c7c9c0; --accent:#1d5a86; --accent-soft:#dce8f1;
+  --ok:#0f7a52; --ok-soft:#dcf2e8; --warn:#9a5b00; --warn-soft:#fbefcf; --bad:#b3261e; --bad-soft:#f8e1de; --neu-soft:#ecebe7;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark; --bg:#111315; --surface:#1a1c1e; --surface-2:#24272a; --ink:#f1f2ee; --ink-2:#c4c6c0; --muted:#979a95;
+  --line:#2d3034; --line-2:#3b3f43; --accent:#7fb3dd; --accent-soft:#1d2d3a;
+  --ok:#4cc38a; --ok-soft:#16312a; --warn:#e3a43a; --warn-soft:#342a12; --bad:#f07068; --bad-soft:#3a1d1b; --neu-soft:#2a2b2a;}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --bg:#111315; --surface:#1a1c1e; --surface-2:#24272a; --ink:#f1f2ee; --ink-2:#c4c6c0; --muted:#979a95;
+  --line:#2d3034; --line-2:#3b3f43; --accent:#7fb3dd; --accent-soft:#1d2d3a;
+  --ok:#4cc38a; --ok-soft:#16312a; --warn:#e3a43a; --warn-soft:#342a12; --bad:#f07068; --bad-soft:#3a1d1b; --neu-soft:#2a2b2a;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.62 var(--f-body);margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.prose{max-width:70ch}
+a{color:var(--accent);text-underline-offset:3px}
+h1,h2,h3{font-family:var(--f-display);font-stretch:108%;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);font-weight:760;letter-spacing:-.01em}
+h2{font-size:clamp(23px,2.8vw,30px);font-weight:720;margin-top:8px}
+h3{font-size:19px;font-weight:680}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:18px;color:var(--ink-2);max-width:66ch}
+section{display:grid;gap:16px;padding-top:44px;margin-top:44px;border-top:1px solid var(--line)}
+section>*{min-width:0}
+p{margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start}
+.tile b{font:700 30px/1 var(--f-display);font-stretch:110%;font-variant-numeric:tabular-nums}
+.tile span{font-size:14px;color:var(--ink-2)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.cols.two{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px;align-content:start}
+.box h3{display:flex;gap:8px;align-items:center}
+.box ul{margin:0;padding-left:18px;display:grid;gap:7px;font-size:15px}
+.k{font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px;white-space:nowrap}
+.k.ok{background:var(--ok-soft);color:var(--ok)} .k.warn{background:var(--warn-soft);color:var(--warn)} .k.add{background:var(--accent-soft);color:var(--accent)} .k.str{background:var(--neu-soft);color:var(--ink-2)}
+.case{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:6px 10px 10px 6px;padding:16px 18px;display:grid;gap:10px}
+.case.ok{border-left-color:var(--ok)}
+.case dl{display:grid;grid-template-columns:minmax(110px,150px) 1fr;gap:6px 14px;margin:0;font-size:15px}
+.case dt{font:500 12px/1.5 var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+.case dd{margin:0}
+@media (max-width:560px){.case dl{grid-template-columns:1fr}.case dt{padding-top:6px}}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font:500 11.5px/1.35 var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--surface-2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .sub{display:block;font-size:12px;color:var(--muted)}
+.chip{display:inline-block;font:500 11.5px/1 var(--f-mono);padding:4px 7px;border-radius:999px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.neu{background:var(--neu-soft);color:var(--ink-2)} .chip.na{border:1px solid var(--line-2);color:var(--muted)}
+.wide{min-width:760px}
+.note{font-size:14px;color:var(--muted)}
+ol.plan{margin:0;padding-left:22px;display:grid;gap:10px}
+ol.plan li::marker{font:600 14px var(--f-mono);color:var(--muted)}
+.prio{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-top:6px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{margin-bottom:10px}
+code{font:13px var(--f-mono);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+<div class="wrap">
+<header style="display:grid;gap:14px">
+  <div class="eyebrow">Product Radar · porównanie metod · dane Allegro Top100 IV 2025 – VIII 2026</div>
+  <h1>Raport zewnętrzny 5.1 wobec naszego Radaru 3.5</h1>
+  <p class="lead">Oba raporty liczą ten sam panel list Top100 Allegro, ale odpowiadają na inne pytanie. Raport 5.1 wskazuje pojedyncze produkty, dla których warto zebrać oferty (z Chin albo od dostawców z Polski i UE). Nasz 3.5 rozstrzyga, które grupy produktów wygramy własnym importem z Chin i kiedy je zamówić. Poniżej, element po elemencie: co z 5.1 wspiera nasze wnioski, co je podważa, co warto przejąć do metody i prezentacji, a gdzie nasza metoda jest lepsza. Każdą liczbę sprawdził drugi, niezależny przebieg obliczeń na surowych plikach.</p>
+  <nav class="toc" aria-label="Spis treści">
+    <a href="#wnioski">Wnioski</a><a href="#roznice">Czym się różnią</a><a href="#dane">Spójność danych</a><a href="#wspiera">Co 5.1 wspiera</a><a href="#podwaza">Co 5.1 podważa</a><a href="#mocniejsze">Gdzie 3.5 jest mocniejsze</a><a href="#plan">Plan zmian w 3.5</a><a href="#prezentacja">Prezentacja</a><a href="#zalaczniki">Załączniki</a>
+  </nav>
+  <div class="tiles" style="margin-top:8px">
+    <div class="tile"><b>99%</b><span>wspólnych produktów ma w obu raportach tę samą sprzedaż IX 2025 – VIII 2026 (1 779 z 1 796, różnica do 0,5%)</span></div>
+    <div class="tile"><b>336 z 336</b><span>produktów „do wyceny teraz” z 5.1 jest w naszej puli 17M. Nasz lejek nie zgubił żadnego.</span></div>
+    <div class="tile"><b>32 / 0</b><span>naszych produktów ze znakiem „kupuje większa część oglądających” ma w 5.1 utrzymaną przewagę konwersji / słabszą konwersję</span></div>
+    <div class="tile"><b>ok. 42%</b><span>rocznej sprzedaży wentylatorów mija, zanim dotrze zamówienie złożone na końcu naszego terminu „I–II 2027” przy 16 tygodniach dostawy</span></div>
+  </div>
+</header>
+<section id="wnioski">
+  <div class="eyebrow">1 · Najważniejsze wnioski</div>
+  <h2>Dane są te same, różnice wynikają z metody i celu</h2>
+  <div class="cols two">
+    <div class="box"><h3><span class="k ok">wspiera 3.5</span></h3><ul>
+      <li>Wzrost kategorii, sprzedaż kategorii i sprzedaż produktów zgadzają się co do grosza (47 z 47, 49 z 49, 99% produktów). Różnice wniosków nie wynikają z danych.</li>
+      <li>Pula 17M zawiera wszystkie 336 produktów „do wyceny” z 5.1.</li>
+      <li>Nasz znak przewagi konwersji przechodzi test 5.1: 32 produkty z utrzymaną przewagą, żaden ze słabszą konwersją.</li>
+      <li>Konwersja potwierdza agregaty, naświetlacze LED, wieszaki, baterie łazienkowe, smart home oraz kołdry i poduszki, a z grup do testu oprawy LED.</li>
+      <li>Filtr importu działa: liderzy listy 5.1, papier toaletowy i trutka BROS, słusznie u nas odpadają. Kalendarz szczytów jest ten sam w 47 z 49 kategorii.</li>
+    </ul></div>
+    <div class="box"><h3><span class="k warn">podważa 3.5</span></h3><ul>
+      <li><b>Terminy zamówień</b> liczymy bez odprawy, kontroli i bufora, a dla typów spoza sekcji 2 od najlepszego miesiąca. Przy 16 tygodniach dostawy wentylatory zamówione na końcu terminu docierają po ok. 42% rocznej sprzedaży, choinki po ok. 82% sprzedaży IV kwartału.</li>
+      <li><b>Wzrost:</b> próg 10% jest niższy niż wzrost rynku; baterie łazienkowe, pompy i klimatyzatory przenośne rosną wolniej niż ich kategoria. W 8 z 18 grup do importu wzrost pochodzi z 30 dni albo 2 miesięcy, a mimo to 5 z nich ma wysoką pewność.</li>
+      <li><b>Marki importerów:</b> to prawda, że duże marki są słabe, ale trzy największe marki (głównie importerów) mają medianę ok. 38% sprzedaży, a w 6 z 18 grup trzech sprzedawców ma ponad 60%. To konkurenci do pokonania, nie wolny rynek.</li>
+      <li><b>Konkretne decyzje:</b> przyprawniki (wzrost z 30 dni, słaba konwersja), czujniki czadu na liście spot przed pełnym testem, ochraniacze odrzucone o 0,3% progu, model dostaw urządzeń, „energia domu” opisana wzrostem fotowoltaiki dla firm.</li>
+    </ul></div>
+    <div class="box"><h3><span class="k add">warto przejąć</span></h3><ul>
+      <li>Liczenie terminu wstecz od początku okna sprzedaży: produkcja, transport, odprawa, kontrola, bufor.</li>
+      <li>Indeks konwersji z oczekiwanymi transakcjami, warunkiem utrzymania w ostatnich 3 miesiącach i ostrzeżeniem o słabszej konwersji.</li>
+      <li>Wzrost udziału w kategorii obok wzrostu sprzedaży; koncentracja sprzedawców w grupie.</li>
+      <li>Model dostaw jako osobny wymiar decyzji.</li>
+      <li>Arkusz kontroli, rejestr zmian decyzji, flaga rozbieżności między kategoriami, dwa mianowniki historii (n/12 i n/17), ID przy każdym produkcie.</li>
+    </ul></div>
+    <div class="box"><h3><span class="k str">3.5 mocniejsze</span></h3><ul>
+      <li>Wzrost r/r tych samych miesięcy; sygnał wzrostu w 5.1 to w dużej części sezon.</li>
+      <li>Lista dużych marek zamiast heurystyki z tytułów, która w 5.1 daje 100% „Top3 marek” w regałach z 24 różnymi markami.</li>
+      <li>Ocena nowych produktów, decyzja dla grupy, szczyt grupy zamiast okna całego zakresu.</li>
+      <li>Filtr importu i przepisów, drugie źródło OBI, skala rynku, kalkulator kosztu, kalendarz i spot. Elektryka i narzędzia ogrodnicze, których 5.1 w ogóle nie ma.</li>
+    </ul></div>
+  </div>
+</section>
+<section id="roznice">
+  <div class="eyebrow">2 · Czym się różnią</div>
+  <h2>Dwa raporty, dwa różne pytania</h2>
+  <p class="prose">Gdy 5.1 mówi „do wyceny”, znaczy to „zebrać oferty na ten konkretny produkt, z dowolnego źródła”. Gdy 3.5 mówi „do importu”, znaczy to „kupujemy w Chinach własny model w tej grupie”. Dlatego połowa produktów, które 5.1 kwalifikuje do wyceny, u nas słusznie nie trafia do zapytań w Chinach, i nie jest to spór o popyt.</p>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th style="width:150px">Wymiar</th><th>Raport 5.1 (zewnętrzny)</th><th>Radar 3.5 (nasz)</th></tr></thead>
+    <tbody>
+      <tr><td>Pytanie</td><td>Które produkty (SKU) warto wyceniać, sprawdzić albo omówić z partnerem lub producentem?</td><td>Które grupy produktów wygramy własnym importem z Chin, jaki model wybrać i kiedy zamówić?</td></tr>
+      <tr><td>Dane</td><td>833 raporty Top100, 49 zakresów, IV 2025 – VIII 2026, 21 546 produktów</td><td>866 raportów miesięcznych z 51 kategorii, 357 raportów z krótszych okresów, dane OBI, sprzedaż całego działu Dom i Ogród; 22 417 produktów</td></tr>
+      <tr><td>Jednostka decyzji</td><td>Pojedynczy produkt; 473 wąskie grupy (kierunki)</td><td>91 grup i 280 typów Allegro; produkty jako przykłady i brief dla fabryki</td></tr>
+      <tr><td>Wynik</td><td>336 do wyceny, 1 083 do sprawdzenia, 1 613 partner lub producent; 293 produkty z przewagą konwersji; 15 tropów „wzrost i mało ofert”, z których żaden nie przechodzi wszystkich filtrów</td><td>18 grup do importu, 27 do testu, 7 do wyceny, 9 przez innych sprzedawców, 30 nie teraz; pula 2 950 produktów; plan kwartalny 102 pozycji</td></tr>
+      <tr><td>Marki</td><td>Rozpoznawane z tytułów; Top3 rozpoznanych marek ≤50% (≤60% przy 3 sygnałach)</td><td>Lista ok. 180 dużych marek; ich udział w sprzedaży grupy poniżej 50%</td></tr>
+      <tr><td>Wzrost</td><td>Sygnał „rosnąca sprzedaż”: VI–VIII 2026 wobec III–V 2026, co najmniej +20%; r/r (IV–VIII i VII–VIII) jako informacja i w filtrze okazji</td><td>IV–VIII 2026 wobec IV–VIII 2025, co najmniej +10%; grupy zimowe i bez pełnej historii: 30 dni r/r</td></tr>
+      <tr><td>Konwersja</td><td>Indeks: transakcje wobec oczekiwanych przy medianie produktów z tej samej kategorii i miesiąca, w cenie 0,5–2×; 12 mies. ≥1,25× i 3 mies. ≥1,10×; osobny status „słabsza konwersja”</td><td>Znak przy produkcie: co najmniej 1,3× mediany produktów w cenie ±30%, w 2/3 miesięcy; dla grupy porównanie z całą kategorią w miesiącu szczytu</td></tr>
+      <tr><td>Koszty i terminy</td><td>Świadomie brak: „nie wyznaczamy fikcyjnej daty zakupu”, termin ustalić z dostawcą</td><td>Kalkulator kosztu, wzór maksymalnego kosztu towaru, kalendarz zamówień, spot na święta</td></tr>
+      <tr><td>Kontrola jakości</td><td>21 kontroli integralności, sumy kontrolne źródeł, rejestr każdej zmiany decyzji, kod odtwarzający wynik</td><td>Przeliczenie od zera, kontrola 121 kategorii, sprawdzenie przypisania produktów do grup (47 z 60 grup ±3%)</td></tr>
+      <tr><td>Prezentacja</td><td>Dokument Word, ok. 440 kart produktów, bez wykresów; ten sam tekst „następnego kroku” w większości kart</td><td>Strona z kartami grup, wykresami, kalendarzem i decyzjami w języku zakupów; Excel z kalkulatorem i formularzem dostawcy</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="dane">
+  <div class="eyebrow">3 · Spójność danych</div>
+  <h2>Liczby zgadzają się co do grosza, bo to ten sam eksport</h2>
+  <p class="prose">Zgodność potwierdza, że oba zespoły poprawnie przetworzyły te same pliki. Nie jest to niezależne potwierdzenie rynku: wspólne dane mają też wspólne ograniczenia, na przykład tę samą lukę w tekstyliach.</p>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th>Kontrola</th><th>Wynik</th><th>Co z tego wynika</th></tr></thead>
+    <tbody>
+      <tr><td>Wzrost IV–VIII r/r kategorii</td><td>Identyczny w 47 z 47 porównywalnych kategorii. Dla tekstyliów i oświetlenia wewnętrznego 5.1 zostawia pole puste, a my podajemy VII–VIII (tekstylia −0,2%, oświetlenie wewnętrzne +30,5%)</td><td>Nasze liczby rynkowe stoją na tych samych podstawach co w 5.1</td></tr>
+      <tr><td>Sprzedaż kategorii w VIII 2026</td><td>Identyczna w 49 z 49 zakresów 5.1</td><td>Ten sam eksport źródłowy</td></tr>
+      <tr><td>Sprzedaż produktu IX 2025 – VIII 2026</td><td>Zgodna (±0,5%) w 1 779 z 1 796 wspólnych produktów</td><td>Różnice wniosków nie wynikają z danych</td></tr>
+      <tr><td>Luka w danych</td><td>Oba raporty liczą tekstylia i oświetlenie wewnętrzne od VII 2025. 5.1 podaje przyczynę: IV–V 2025 puste, w VI 2025 10 wierszy z ujemnymi wartościami; razem 6 wadliwych plików</td><td>Warto ponownie pobrać te 6 eksportów, żeby policzyć pełne IV–VIII r/r</td></tr>
+      <tr><td>Zakres</td><td>Wszystkie 49 zakresów 5.1 są w naszych 51 kategoriach. Tylko u nas: Elektryka i akcesoria oraz Narzędzia ogrodnicze (33 raporty)</td><td>Dla tych dwóch kategorii 5.1 nie daje ani potwierdzenia, ani kontrdowodów</td></tr>
+    </tbody>
+  </table></div>
+  <div class="case">
+    <h3>Jedyna rozbieżność: produkty obecne w kilku kategoriach</h3>
+    <p class="prose">17 wspólnych produktów ma różną sprzedaż roczną. Wszystkie występują w kilku listach Allegro, które dla tego samego produktu i miesiąca podają różne wartości. My liczymy sprzedaż tylko z kategorii głównej (tej z najwyższą sprzedażą). 5.1 bierze jedną obserwację na miesiąc ze wszystkich zakresów, a gdy produkt jest w dwóch, wybiera głębszy. Dlatego 5.1 bywa niżej (11 produktów, np. folia aluminiowa Paclan 0,83 mln zł wobec 3,54 mln zł u nas, falownik Deye SUN-15K 0,35 wobec 0,95 mln zł, bateria Grohe SmartControl 0,29 wobec 0,65 mln zł), a bywa wyżej (6 produktów, np. folia w płynie Tytan WINS 1,19 wobec 0,82 mln zł, bo 5.1 dolicza miesiące widoczne tylko w drugiej liście). Żadna z reguł nie dowodzi, który eksport jest poprawny. Różnice skupiają się w fotowoltaice i bateriach łazienkowych.</p>
+    <p class="prose"><b>Do zrobienia:</b> oznaczać takie produkty w puli (u nas 282 produkty w dwóch kategoriach) i podawać obie wartości. Przy falownikach sprawdzić, jak reguła wyboru kategorii wpływa na sprzedaż grupy.</p>
+  </div>
+</section>
+<section id="wspiera">
+  <div class="eyebrow">4 · Co 5.1 wspiera</div>
+  <h2>Tezy 3.5, które 5.1 potwierdza</h2>
+
+  <div class="case ok"><h3>Pula 17M nie gubi produktów</h3><dl>
+    <dt>Dowód</dt><dd>Wszystkie 336 produktów „do wyceny teraz” z 5.1 są w naszej puli. Z 1 236 produktów 5.1 spoza puli żaden nie jest „do wyceny”; to w większości liderzy bardzo wąskich podgrup 5.1 i produkty widoczne w Top100 w jednym miesiącu (690 z nich), z medianą sprzedaży 34 tys. zł rocznie. 147 z nich i tak mamy w innych arkuszach, głównie w „Nowych produktach”.</dd>
+    <dt>Wyjątek</dt><dd>9 z nich ma utrzymaną przewagę konwersji, m.in. moskitiera BROS 130×150 cm (indeks 12 mies. 3,76×), materac Heisberg 140×200 (1,38×), agregat Daewoo GDA 7500E. Warto je dopisać do puli jako przykłady.</dd>
+  </dl></div>
+
+  <div class="case ok"><h3>Nasz znak konwersji przechodzi test 5.1</h3><dl>
+    <dt>Dowód</dt><dd>Znak „kupuje go większa część oglądających” ma u nas 84 produkty (50 w kartach grup, 36 na liście „Mało sklepów”). 57 z nich jest w puli 5.1: 32 mają utrzymaną przewagę, 8 przewagę tylko historyczną, 13 nie ma pełnego porównania, 4 są bez przewagi, żaden nie ma słabszej konwersji. 50 z 55 produktów z policzonym indeksem ma indeks 12 mies. co najmniej 1,25× (mediana 1,46×).</dd>
+    <dt>Wniosek</dt><dd>Obie metody mierzą to samo zjawisko i są pokrewne, więc zgodność jest spodziewana. Wartość dodana 5.1 to warunek utrzymania w VI–VIII 2026: 8 naszych znaków jest już tylko historycznych.</dd>
+  </dl></div>
+
+  <div class="case ok"><h3>Konwersja potwierdza 6 z 18 grup do importu</h3>
+    <p class="prose">Licząc tylko produkty z pełnym porównaniem, więcej produktów z utrzymaną przewagą niż ze słabszą konwersją i medianę indeksu powyżej 1,05× mają: agregaty (9 z przewagą, 3 słabsze, mediana 1,33×), naświetlacze LED (10 i 1, 1,26×), wieszaki (4 i 2, 1,46×), baterie łazienkowe (5 i 1, 1,16×), smart home (7 i 6, 1,12×) oraz kołdry i poduszki (4 i 0, 1,06×). Wśród grup do testu podobnie wypadają oprawy LED i plafony (8 i 4, 1,09×; 20 z 27 wspólnych produktów 5.1 daje „do wyceny”), drabiny aluminiowe, piły łańcuchowe i lasery. Dla nagrzewnic, grzejników, klimatyzatorów przenośnych, taśm LED i parasoli pełnych porównań jest za mało, żeby cokolwiek orzec. Ostrzegawczo wypadają przyprawniki i, przy małej liczbie porównań, wentylatory (sekcja 5). Pełna tabela w załączniku A.</p>
+  </div>
+
+  <div class="case ok"><h3>Filtr importu jest potrzebny</h3><dl>
+    <dt>Dowód</dt><dd>Z 336 produktów „do wyceny” 5.1 u nas 162 to „pytamy dostawcę” (52 w grupach do importu, 69 do testu, 41 do wyceny), 48 „tylko do porównania cen”, 43 czeka na decyzję o grupie, 63 „nie pytamy” (23 środki biobójcze, 21 duże marki, 19 poza profilem importu), 20 „nie pytamy teraz”. 81 z 336 to produkty dużych marek z naszej listy, najczęściej Bros (14), Rotho, Sonoff, Xiaomi, Victron, Grohe i Blum.</dd>
+    <dt>Wniosek</dt><dd>Na czele sekcji 1 raportu 5.1 są papier toaletowy Almusso (5,06 mln zł) i proszek BROS na mrówki (4,65 mln zł). U nas pierwszy jest poza profilem importu (cena ok. 30 zł, duży karton), drugi wymaga rejestracji jako środek biobójczy. 5.1 sama zastrzega, że preparaty przeciw owadom wymagają najpierw ustalenia tożsamości produktu i modelu dostaw. Z 66 liderów sekcji 1 raportu 5.1 u nas 26 to „pytamy dostawcę”, 16 czeka na decyzję o grupie, a 24 odpada z powodu marki, przepisów, profilu importu albo małego rynku.</dd>
+  </dl></div>
+
+  <div class="case ok"><h3>Kalendarz sezonu jest ten sam</h3>
+    <p class="prose">Miesiąc szczytu z naszej „Mapy 51 kategorii” zgadza się ze wszystkimi 26 zakresami z sekcji 5 raportu 5.1 i z 47 z 49 szczytów w sekcji 6. Różnią się tylko grillowanie i meble ogrodowe, bo Mapa pokazuje szczyt z 17 miesięcy (2025), a 5.1 w sekcji 6 z ostatnich 12 (2026). Teza z sekcji 9 „znamy kalendarz sezonu z 17 miesięcy” ma więc potwierdzenie w drugim raporcie, choć na tych samych danych.</p>
+  </div>
+
+  <div class="case ok"><h3>Briefy dla fabryk są zbieżne</h3>
+    <p class="prose">Specyfikacje 5.1 i nasze karty grup opisują te same produkty: wentylatory 40–50 W z oscylacją i pilotem, lasery 4D 16 linii, agregaty 2,3–4 kW (5.1: 2,5–3,5 kW), grille gazowe 3–4 palniki z szafką na butlę (5.1: 2–4), pompy zatapialne 750–1 500 W (5.1: 1,1–1,5 kW), anemostaty 100–160 mm, wieszaki w paczkach 20–100 szt. (5.1: 30–50). Zbieżność dwóch zespołów wzmacnia briefy.</p>
+  </div>
+
+  <div class="case ok"><h3>Moskitiery: lider potwierdzony, typ mieszany</h3>
+    <p class="prose">U nas moskitiery są pierwsze w kolejce pełnych testów (sekcja 4.1, wiersz A). W 5.1 lider typu, moskitiera 140×140 cm (2,19 mln zł), ma utrzymaną przewagę konwersji 1,37× / 1,20×. Z 15 wspólnych produktów 7 jest „do wyceny”, ale konwersja jest mieszana: 3 z przewagą (dlaokna 140×140, naokienko, aluminiowa na metry 149×149) i 3 słabsze. Wzrost typu, +11% r/r, jest tuż nad naszym progiem 10%. Wniosek: pełny test zgodnie z kolejką, z briefem opartym na trzech produktach z przewagą.</p>
+  </div>
+</section>
+<section id="podwaza">
+  <div class="eyebrow">5 · Co 5.1 podważa</div>
+  <h2>Gdzie 3.5 powinno zareagować</h2>
+  <p class="prose">Część punktów wynika wprost z danych 5.1, część z metody 5.1 zastosowanej do naszych liczb. Kolejność: od największego wpływu na zamówienia.</p>
+
+  <h3 style="margin-top:8px">A. Terminy zamówień</h3>
+  <div class="case"><h3>1. Terminy liczone bez odprawy, kontroli i bufora</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Sekcja 7: „Produkcja trwa 4–6 tygodni, a transport morski 6–10 tygodni, więc zamawiamy 3–4 miesiące przed sezonem”. W całym raporcie nie ma odprawy, kontroli jakości ani bufora jako składnika terminu. Dla typów z sekcji 4.1, 5, 8.5 i 8.6 termin to „4 miesiące przed najlepszym miesiącem”.</dd>
+    <dt>Metoda 5.1</dt><dd>„Moment zamówienia oblicz od docelowej dostępności: odejmij czas produkcji, transportu, odprawy, kontroli i uzgodniony bufor. Dane nie zawierają tych czasów; nie wyznaczamy fikcyjnej daty zakupu.” Próbki i porównanie ofert mają być zakończone przed początkiem okna.</dd>
+    <dt>Skutek</dt><dd>
+      <b>Wentylatory i klimatyzatory przenośne</b> (termin „I–II 2027”): zamówienie 28.02 dociera przy 10–12 tygodniach 9–23 maja (strata 3–7% rocznej sprzedaży), ale przy 16 tygodniach ok. 20 czerwca, po 42% rocznej sprzedaży wentylatorów i 55% klimatyzatorów. Bezpieczny termin przy 16 tygodniach i 2 tygodniach zapasu to ok. 26.01.2027. Chiński Nowy Rok (6.02.2027) wypada w środku naszego okna.<br>
+      <b>Choinki, bombki, stojaki, pościel, zasłony</b> (termin VIII 2027 z reguły „4 miesiące przed grudniem”): zamówienie 31.08 przy 16 tygodniach dociera ok. 21.12, po ok. 82% sprzedaży IV kwartału; przy 10 tygodniach ok. 9.11. Lampki świąteczne z sekcji 2 mają termin VI–VII 2027, więc plan jest wewnętrznie niespójny.<br>
+      <b>Piły łańcuchowe, falowniki, akcesoria PV</b> (termin „X–XI 2026”, sezon od lutego 2027): przy 16 tygodniach i 2 tygodniach zapasu termin minął ok. 28.09.2026, przed datą raportu i przed decyzją planowaną na XI 2026. Te grupy sprzedają przez cały rok, więc tracą część sprzedaży (17–22% przy 16 tygodniach), a nie cały sezon.<br>
+      <b>Smart home, taśmy LED, lasery, oprawy LED</b>: IV kwartał to 28–32% ich roku, a plan ma jedno zamówienie „na start” w XI 2026 – I 2027 i żadnego zamówienia na IV kw. 2027.</dd>
+    <dt>Co zrobić</dt><dd>Termin liczyć wstecz od daty „towar w magazynie” na początku okna (szczyt minus miesiąc): minus produkcja, transport, odprawa i kontrola, bufor 2–4 tygodni, a przy pierwszym zamówieniu także próbki i badania. Czas dostawy wpisać jako parametr w arkuszu „Plan kwartalny”. Produkty świąteczne przesunąć na VI 2027, letnie na XII 2026 – połowę I 2027, a dla grup z terminem X–XI 2026 napisać wprost, że morski termin na wiosnę 2027 już minął (kolej albo część sezonu). Dodać drugą falę zamówień na IV kw. 2027 dla grup całorocznych. Konkretne daty zachować, bo to przewaga 3.5 nad 5.1.</dd>
+  </dl></div>
+
+  <h3 style="margin-top:8px">B. Pomiar wzrostu i pewność</h3>
+  <div class="case"><h3>2. Próg wzrostu 10% jest niższy niż wzrost rynku</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Pytanie 2 ma „tak” przy wzroście grupy co najmniej 10% r/r. Rynek rośnie o ok. 12% (IV–VIII, indeks miesięczny ok. +12,3%), mediana kategorii +12,1%.</dd>
+    <dt>Co pokazuje 5.1</dt><dd>5.1 mierzy też wzrost udziału w stałym zakresie (co najmniej +20% względnie). Na naszych liczbach: baterie łazienkowe rosną o 14,5% przy kategorii +21,7%, pompy ogrodowe +15,1% przy nawadnianiu +23,6%, klimatyzatory przenośne +77,7% i osprzęt wentylacji +68,4% przy klimatyzacji i wentylacji +95,2% (tę kategorię ciągnie klimatyzacja split, +206%). Wszystkie cztery to grupy do importu, które tracą udział we własnej kategorii. Zyskują udział wieszaki (+29,4% przy +5,1%), parasole (+52,9% przy −4,1%) i lampy solarne (+32,5% przy +18,0%).</dd>
+    <dt>Co zrobić</dt><dd>Dodać kolumnę „zmiana udziału grupy w kategorii IV–VIII” i używać jej jako ostrzeżenia, nie twardej bramki. W kartach baterii łazienkowych i pomp dopisać, że grupa traci udział.</dd>
+  </dl></div>
+
+  <div class="case"><h3>3. Wysoka pewność przy wzroście z 30 dni albo 2 miesięcy</h3><dl>
+    <dt>Nasz wniosek</dt><dd>W 8 z 18 grup do importu wzrost nie pochodzi z pełnego IV–VIII: w 6 z 30 dni (nagrzewnice, grzejniki, agregaty, naświetlacze, kółka, przyprawniki), w 2 z VII–VIII (kołdry, taśmy LED). Pięć z nich ma pewność „wysoka”. Pewność mierzy tylko odporność na zmianę progów.</dd>
+    <dt>Co pokazuje 5.1</dt><dd>5.1 nie liczy wzrostu bez pełnych okien i ostrzega, że jeden sezon nie potwierdza powtarzalności. Na pełnym IV–VIII grzejniki (+1,9%) i przyprawniki (+9,1%) nie przeszłyby progu; nagrzewnice (+12,1%), agregaty (+24,0%) i naświetlacze (+11,9%) tak. Kołdry i taśmy LED liczą wzrost od VII 2025, czyli od najniższego miesiąca po luce w danych; VII–VIII to tylko 14% sprzedaży kołder, a same taśmy LED w VIII rosną o 44%, nie o 124%. Nagłówek „44 z 51 kategorii rośnie” obejmuje kategorie z niepełnym okresem; z pełnym IV–VIII to 42 z 48 (w 5.1 41 z 47). VIII r/r z 5.1 częściowo potwierdza kierunek zimowy: nagrzewnice +22,7%, grzejniki +21,7%, agregaty +90%.</dd>
+    <dt>Co zrobić</dt><dd>Dodać do pewności drugi wymiar: ile danych stoi za wzrostem. Wzrost z 30 dni albo 2 miesięcy daje najwyżej pewność „średnia”, z warunkiem potwierdzenia na XI 2026 – I 2027. Grzejniki oznaczyć jako grupę, która przechodzi wyłącznie dzięki oknu 30 dni. Nagłówek zmienić na „42 z 48 kategorii z pełnym porównaniem”.</dd>
+  </dl></div>
+
+  <h3 style="margin-top:8px">C. Konkurencja i model dostaw</h3>
+  <div class="case"><h3>4. „Wygrywają marki importerów”: tak, ale trzeba je pokonać</h3><dl>
+    <dt>Nasz wniosek</dt><dd>„W 15 z 18 grup do importu duże marki mają mniej niż 20% sprzedaży. Liderami są firmy importujące pod własną marką, np. Mar-Pol czy EBERG.” Liczby są prawdziwe, bo nasza lista dużych marek celowo pomija marki importerów.</dd>
+    <dt>Co pokazuje 5.1</dt><dd>Top3 marek z tytułów (z importerami) ma w zakresach naszych grup importowych medianę ok. 38%, a ponad 50% w bateriach łazienkowych (58%), oświetleniu ogrodowym (57%), halogenach i naświetlaczach (53%) i oświetleniu wewnętrznym (53%). Dolne granice udziałów: Mar-Pol co najmniej 16% nagrzewnic, Smartled 14–15% oświetlenia ogrodowego i halogenów, Masterled 15%, EBERG 13% klimatyzacji i wentylacji. Trzech sprzedawców ma ponad 60% sprzedaży w 6 z 18 grup: grzejniki (75%), lampy solarne i girlandy (76%), taśmy LED (78%), osprzęt wentylacji (73%), wieszaki (60%), parasole (100%, mała próba). Nisko: nagrzewnice (20%), regały (26%), wentylatory (32%), przyprawniki (36%), klimatyzatory (39%). Uwaga: obie miary pochodzą z VIII 2026, dla grup zimowych to miesiąc poza sezonem.</dd>
+    <dt>Co zrobić</dt><dd>W sekcjach 1 i 9 dopisać, że Mar-Pol, Smartled, Masterled i EBERG to konkurenci do pokonania, a nie dowód wolnego rynku. Do kart i „Profilu 45 grup” dodać udział Top3 sprzedawców jako ostrzeżenie. Baterie łazienkowe (duże marki 49,2% przy progu 50%; 5.1 kieruje 13 z 18 wspólnych produktów do partnera) pokazać z wynikiem przy progu ±5 pkt.</dd>
+  </dl></div>
+
+  <div class="case"><h3>5. Model dostaw urządzeń: nagrzewnice, agregaty, klimatyzatory, grzejniki</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Nagrzewnice (7/7), grzejniki elektryczne (7/7), agregaty (6/7) i klimatyzatory przenośne (6/7) do importu, głównie z wysoką pewnością; warunki: CE, GAR, Stage V, części.</dd>
+    <dt>Co pokazuje 5.1</dt><dd>Wszystkie 39 wspólnych nagrzewnic, 36 z 38 agregatów, 13 z 13 klimatyzatorów przenośnych i 25 z 25 grzejników trafia do „partner / producent”. Przyczyny są różne. Nagrzewnice: jawna korekta klasyfikacji („wymaga oceny dokumentacji i serwisu”); według reguł sprzedażowych 5.1 byłyby wśród 66 nowych nagrzewnic 8 „do wyceny” i 58 „do sprawdzenia”. Agregaty: klasa logistyczna REGULATED; 17 z 38 spełnia wszystkie warunki bramki, a mimo to idzie do partnera. Grzejniki i klimatyzatory: bramka marek (Top3 63% i 52%) i krótka historia. Regały i taśmy LED: artefakt rozpoznawania marek (sekcja 6).</dd>
+    <dt>Ocena</dt><dd>To nie są dowody ze sprzedaży: agregaty mają w 5.1 jedną z najlepszych konwersji. Argument dotyczy realnego ryzyka: gwarancji, serwisu, części, reklamacji i odpowiedzialności za urządzenia gazowe i spalinowe. Ten sam spór był przy v4.4.</dd>
+    <dt>Co zrobić</dt><dd>Decyzje zostawić, ale dodać do kart urządzeń wymiar „model dostaw” (fabryka pod naszą marką / sprawdzony producent z serwisem w UE / dystrybutor w Polsce) i warunek wejścia: umowa serwisowa i zapas części w Polsce przed pierwszym zamówieniem nagrzewnic gazowych i agregatów. W kalkulatorze dodać koszt serwisu i rezerwę gwarancyjną na sztukę, z wartościami od dostawcy.</dd>
+  </dl></div>
+
+  <div class="case"><h3>6. „Największa szansa: energia domu” opisana wzrostem fotowoltaiki dla firm</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Sekcja 9: falowniki i magazyny energii rosną o 136% r/r i są „największą szansą”.</dd>
+    <dt>Co pokazuje 5.1</dt><dd>88% sprzedaży naszej grupy pochodzi z kategorii „Fotowoltaika – przemysł energetyczny” (Firma i usługi), która rośnie o 73%; domowa fotowoltaika rośnie o 19%. Wzrost grupy (+136%) jest wyższy niż w obu kategoriach, więc opisuje wybrany podzbiór. W 5.1 ten zakres to 43 z 62 produktów u partnera, z falownikami Deye na czele (Deye ma co najmniej 20% sprzedaży zakresu). Produkty spoza ścieżki partnera to w ok. 73% wartości akcesoria: profile 40×40, przewody solarne, ładowarki Victron.</dd>
+    <dt>Co zrobić</dt><dd>Pisać „fotowoltaika dla firm +73%, domowa +19%”, a jako realną szansę importu wskazać akcesoria (kable, złącza, profile). Falowniki zostawić w teście po pełnej weryfikacji dokumentów.</dd>
+  </dl></div>
+
+  <h3 style="margin-top:8px">D. Konkretne decyzje</h3>
+  <div class="case"><h3>7. Przyprawniki do importu</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Do importu, 6/7, średnia pewność; wzrost z 30 dni (+70%).</dd>
+    <dt>Co pokazuje 5.1</dt><dd>Na pełnym IV–VIII wzrost to +9,1%, poniżej progu. Konwersja: mediana indeksu 0,76× na pełnych porównaniach, żaden produkt z przewagą, 3 poniżej porównania i wszystkie trzy są w naszej karcie: Gockowiak 24 słoiczki (0,85× / 0,74×), pojemniki na przyprawy 24 szt. (0,62× / 0,62×), stojak 24 szklane słoiczki (0,66× / 0,54×).</dd>
+    <dt>Co zrobić</dt><dd>Przesunąć do testu małą partią albo zostawić import z warunkiem: potwierdzenie wzrostu w XI–XII 2026 i wyjaśnienie konwersji (cena, zdjęcia, opinie) na 2–3 ofertach.</dd>
+  </dl></div>
+
+  <div class="case"><h3>8. Czujniki czadu i dymu na liście spot przed pełnym testem</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Typ przeszedł tylko wstępną ocenę (5 z 6, wzrost r/r nieznany, Kidde 37%), pełny test planujemy po I 2027, a jednocześnie jest drugi na liście spot z zamówieniem do ok. 25.10.2026 („najpierw szybki test”).</dd>
+    <dt>Co pokazuje 5.1</dt><dd>5.1 nie ma danych z elektryki, ale w kierunkach partnerskich trzyma specyfikację: „czujniki bezpieczeństwa z pełnymi testami, certyfikacją, głośnym alarmem i wysoką niezawodnością; bez kompromisu jakościowego”.</dd>
+    <dt>Co zrobić</dt><dd>Zdjąć czujniki z listy spot albo kupować je tylko od dystrybutora z gotowym certyfikatem (EN 50291, EN 14604). Przy produkcie ratującym życie dwa tygodnie na weryfikację dokumentów to za mało.</dd>
+  </dl></div>
+
+  <div class="case"><h3>9. Ochraniacze na materac odrzucone o 0,3% progu</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Typ „nie teraz: mały rynek” (sekcja 4.1, wiersz C).</dd>
+    <dt>Dane</dt><dd>Najlepszy miesiąc 498 333 zł (VII 2026) przy progu 500 000 zł; pozostałe 5 odpowiedzi to „tak”: wzrost VII–VIII r/r +69%, duże marki 0%, cena ok. 79 zł, 33 produkty, najlepszy ma 16% sprzedaży. W 5.1 osobny audyt: 3,25 mln zł w 12 mies. (7,2% tekstyliów), udział rośnie z 1,3% w XII 2025 do 14,5% w VII 2026. Uwaga: +31,9% ochraniacza Hilding w 5.1 to porównanie VI–VIII z III–V; r/r ten produkt ma −1,2%. Konwersja w 5.1 neutralna.</dd>
+    <dt>Szerzej</dt><dd>Tylko na progu sprzedaży odpada 7 typów: ochraniacze, sprzęt budowlany – akcesoria (421 tys. zł), uszczelki (405 tys.), folie okienne (377 tys.), rolety zewnętrzne (346 tys.), miski WC (328 tys.), maty i organizery (323 tys.).</dd>
+    <dt>Co zrobić</dt><dd>Ochraniacze przenieść do wiersza A i pobrać eksport podkategorii (brief z 5.1: wodoodporne, 160×200 i 140×200, z gumką albo bokami). Dla pozostałych sześciu typów pokazać wynik przy łagodniejszym progu 0,35 mln zł, tak jak robimy to dla grup.</dd>
+  </dl></div>
+
+  <div class="case"><h3>10. Rekuperatory: decyzja może zostać, uzasadnienie nie</h3>
+    <p class="prose">Odkładamy rekuperatory m.in. z powodu „średniej ceny ok. 1 900 zł”. W naszej puli średnią zawyża jeden drogi model (BSK notus, ok. 6 650 zł); mediana to ok. 980 zł, a pięć pozostałych modeli w cenie 560–1 100 zł daje 92% sprzedaży. 5.1 opisuje kierunek jako rekuperator ścienny, decentralny 100–160 mm, a BSK ZEPHYR 110 sprzedał 2,45 mln zł przy cenie ok. 750 zł i indeksie konwersji 2,08×; kieruje go do partnera. Decyzja „nie teraz” ma inne dobre powody (7 produktów w Top100, brak drugiego źródła, montaż i serwis), ale powód cenowy trzeba poprawić, a kierunek opisać jako partner albo test z próbą hałasu i sprawności.</p>
+  </div>
+
+  <h3 style="margin-top:8px">E. Konwersja w kartach i tezy</h3>
+  <div class="case"><h3>11. Przykłady w kartach ze słabszą konwersją</h3>
+    <p class="prose">24 produkty pokazane w naszych kartach grup mają w 5.1 status „poniżej porównania” (indeks VI–VIII 2026 poniżej 0,80×). Największe sprzedażą: zmiękczacz Water Technic 32 l (0,85× / 0,77×), grill gazowy Lehmann 9 kW (0,64× / 0,69×) i Lehmann Ohio (0,73× / 0,78×), grill węglowy Berdsen (0,66× / 0,74×), zmiękczacz Aquafit 27 l, odstraszacz Viano, geowłóknina crys-x; dalej m.in. hydrofory Einbach, magazyn energii HumsiENK i przyprawniki Gockowiak. 15 z nich 5.1 nadal daje „do wyceny”: słabsza konwersja to sygnał do wyjaśnienia, nie do odrzucenia. Fabryka dostaje te produkty jako wzór, więc warto przy nich dodać ostrzeżenie i podać wzór z utrzymaną przewagą z tej samej grupy, np. agregat Kowal Polska 8500 W (1,34× / 1,64×), grill gazowy DEKRAFT Nebraska (1,70× / 1,71×), grill Viben 13,7 kW (1,34× / 1,55×), zmiękczacz Watermarket HYDRO PREMIUM 32 l (1,68× / 2,14×), pompa głębinowa Magnum 3200 W (1,25× / 1,33×). Lista 24 w załączniku B, 36 kandydatów na wzory w załączniku C.</p>
+  </div>
+
+  <div class="case"><h3>12. Teza „niska konwersja grupy to szansa”</h3><dl>
+    <dt>Nasz wniosek</dt><dd>Sekcja 2.3: „Klienci kupują rzadziej niż w całej kategorii m.in. w grillach gazowych (1,9% wobec 3,1%), zmiękczaczach wody (3,8% wobec 9,9%) i szklanych pojemnikach (7,5% wobec 13,9%), więc lepsza oferta może tu przejąć sprzedaż.”</dd>
+    <dt>Co pokazuje 5.1</dt><dd>Na poziomie produktów w tych grupach przeważają słabsze: grille gazowe 5 słabszych i 3 z przewagą (mediana 0,91×), zmiękczacze 4 i 1. 5.1 zastrzega, że konwersja nie kontroluje ruchu, reklamy, opinii ani siły marki.</dd>
+    <dt>Ocena</dt><dd>Porównujemy grupę z całą kategorią w jednym miesiącu szczytu, także z tanimi produktami (w zmiękczaczach np. tabletki solne). Sami w sekcji 4.2 piszemy, że uczciwe jest porównanie z produktami w podobnej cenie, bo tańsze kupuje większa część oglądających.</dd>
+    <dt>Co zrobić</dt><dd>Przeformułować na hipotezę do sprawdzenia w teście; konwersję grup liczyć jak indeks 5.1 (transakcje wobec oczekiwanych przy produktach w podobnej cenie).</dd>
+  </dl></div>
+
+  <div class="case"><h3>13. „Ukryte okazje” i etykiety pewności</h3>
+    <p class="prose">5.1 szukała produktów z rosnącym popytem i małą liczbą ofert: 15 tropów, 5 z przewagą konwersji, żaden po filtrach koncentracji marek i sprzedawców, logistyki i wzrostu r/r. Wniosek 5.1: dane nie potwierdzają gotowej listy łatwych nisz. Nasza lista „Dobra sprzedaż, mało sklepów” (79) pokrywa się z tymi tropami w 2 przypadkach; wieszak BES-POL, nasz lider grupy, odpada w 5.1 na koncentracji (Top3 marek z nierozpoznanymi 63%, Top3 sprzedawców 60%). Warto nazwać listę „do sprawdzenia” i dodać przy niej te filtry. Przy okazji: osprzęt do elektronarzędzi i zaciskarki zmieniają decyzję w obu wariantach progów, a mają etykietę „średnia”, którą definiujemy jako zmianę w jednym wariancie. Skala pewności potrzebuje poziomu „niska”.</p>
+  </div>
+</section>
+<section id="mocniejsze">
+  <div class="eyebrow">6 · Gdzie 3.5 jest mocniejsze</div>
+  <h2>Czego z 5.1 nie przejmować</h2>
+  <div class="cols">
+    <div class="box"><h3>Wzrost r/r tych samych miesięcy</h3><p>Sygnał „rosnąca sprzedaż” w 5.1 to VI–VIII 2026 wobec III–V 2026, czyli dla towaru letniego w dużej części przejście z wiosny w lato; 5.1 sama pisze, że wzrost może wynikać z sezonu. Z 468 produktów z tym sygnałem 290 ma porównanie VII–VIII r/r, a 72 z nich sprzedają mniej niż rok wcześniej. Przykład: ochraniacz Hilding ma +31,9% „3+3”, ale −1,2% r/r. Nasze IV–VIII 2026 wobec IV–VIII 2025 eliminuje ten efekt.</p></div>
+    <div class="box"><h3>Rozpoznawanie dużych marek</h3><p>384 z 3 032 kandydatów 5.1 ma „Top3 rozpoznanych marek” 100% przy 0% marek nierozpoznanych. Wszystkie trafiają do partnera, choć w praktyce to ok. 134 powtórzone wartości grupowe. W regałach (59 takich produktów) tytuły pokazują 24 różne marki, m.in. Thomas, Legger, Humberg, Gockowiak, Dodas, Escal i Rebel; w taśmach LED cztery marki i tytuły bez marki. Wynik 100% jest tam niemożliwy, więc to najpewniej artefakt heurystyki, który 5.1 przyznaje przy markach „PROSZEK” i „LAMPA”. Przekierowanie regałów i taśm LED do partnera nie jest więc argumentem przeciw naszym decyzjom. Nasza lista dużych marek zgadza się z ręcznym oznaczeniem w 517 z 519 produktów.</p></div>
+    <div class="box"><h3>Koncentracja marek to nie siła marek</h3><p>W odkurzaczach przemysłowych Top3 marek w 5.1 to 28,7% (najwyżej 49% z markami nierozpoznanymi), a duże marki z naszej listy mają 79% (Kärcher, Makita, Bosch, Parkside, Starmix, DeWalt, Metabo). Rynek rozdzielony między wiele dużych marek nadal jest rynkiem dużych marek. Nasza decyzja „przez innych sprzedawców” jest tu trafniejsza niż „do sprawdzenia” w 5.1.</p></div>
+    <div class="box"><h3>Nowe produkty</h3><p>5.1 oznacza jako „nowy sygnał” 1 147 produktów z pierwszą obserwacją w VI–VIII 2026 i sama zastrzega, że to nowe obserwacje, a nie premiery. Nasza ocena udziału w kategorii od wejścia do Top100 jest dokładniejsza i odporna na sezonowe spadki.</p></div>
+    <div class="box"><h3>Decyzja dla grupy i sezon grupy</h3><p>5.1 zostawia 3 032 decyzje na poziomie produktu i okna sezonu na poziomie całego zakresu (sama pisze, że okno nie dotyczy pojedynczego SKU). My liczymy szczyt grupy lub typu, co jest trafniejsze np. dla akcesoriów kominkowych (u nas XI–II, w zakresie 5.1 IX–XI) i zasłon gotowych. 5.1 jest też niespójna: w sekcji 5 bierze dla grilli i mebli ogrodowych szczyt z 2025, a w sekcji 6 z 2026; my świadomie bierzemy najnowszy sezon.</p></div>
+    <div class="box"><h3>Import, przepisy i pieniądze</h3><p>Filtr środków biobójczych, cła antydumpingowego, F-gazów, ceny poniżej 40 zł i towaru niebezpiecznego w transporcie; drugie źródło z OBI; skala całego rynku; kalkulator kosztu z MOQ, m³, cłem, zwrotami i zyskiem na m³; terminy zamówień i spot. 5.1 kończy na „do wyceny” i tylko wymienia koszty, które trzeba zebrać. Jedno, co 5.1 dodaje: kapitał zamrożony w zapasie przed sezonem.</p></div>
+  </div>
+</section>
+<section id="plan">
+  <div class="eyebrow">7 · Plan zmian w 3.5</div>
+  <h2>Co zmienić, w kolejności</h2>
+  <div class="prio">Priorytet A · decyzje i terminy, przed zamówieniami</div>
+  <ol class="plan">
+    <li><b>Terminy zamówień</b> liczone wstecz od początku okna sprzedaży, z odprawą, kontrolą, buforem i próbkami; czas dostawy jako parametr. Produkty świąteczne na VI 2027, letnie na XII 2026 – połowę I 2027, chiński Nowy Rok w kalendarzu, druga fala na IV kw. 2027 dla grup całorocznych, jasna informacja, że morski termin na wiosnę 2027 dla pił, falowników i akcesoriów PV minął.</li>
+    <li><b>Czujniki czadu i dymu</b> zdjąć z listy spot albo kupować tylko od dystrybutora z gotowym certyfikatem.</li>
+    <li><b>Przyprawniki</b> do testu małą partią albo import warunkowy po potwierdzeniu wzrostu i wyjaśnieniu konwersji.</li>
+    <li><b>Pewność</b> z drugim wymiarem: ile danych stoi za wzrostem. Grzejniki, nagrzewnice, agregaty, naświetlacze i kołdry z warunkiem potwierdzenia zimą 2026/27; poziom „niska” dla osprzętu i zaciskarek.</li>
+    <li><b>Model dostaw</b> w kartach urządzeń i warunek serwisowy dla nagrzewnic gazowych i agregatów; koszt serwisu i rezerwa gwarancyjna w kalkulatorze.</li>
+    <li><b>Ochraniacze na materac</b> do wiersza A sekcji 4.1 i eksport podkategorii; pozostałe 6 typów odrzuconych tylko na progu sprzedaży pokazać przy progu 0,35 mln zł.</li>
+    <li><b>Konwersja w kartach</b>: status i indeks z 5.1 przy produktach (najszybciej po ID z arkusza 21_KONWERSJA), ostrzeżenie przy 24 produktach z załącznika B, nowe wzory z załącznika C.</li>
+  </ol>
+  <div class="prio">Priorytet B · tezy raportu</div>
+  <ol class="plan" start="8">
+    <li><b>Marki importerów</b>: dopisać, że Mar-Pol, Smartled, Masterled i EBERG to konkurenci do pokonania; udział Top3 sprzedawców grupy jako ostrzeżenie; baterie łazienkowe z wynikiem przy progu marek ±5 pkt.</li>
+    <li><b>Energia domu</b>: rozdzielić fotowoltaikę dla firm (+73%) i domową (+19%); jako szansę importu wskazać akcesoria PV.</li>
+    <li><b>Nagłówek wzrostu</b>: „42 z 48 kategorii z pełnym porównaniem IV–VIII”; przy kołdrach i taśmach LED oznaczyć wzrost z 2 miesięcy.</li>
+    <li><b>Teza z 2.3</b> o niskiej konwersji grup jako hipoteza; konwersję grupy porównywać z produktami w podobnej cenie.</li>
+    <li><b>Rekuperatory</b>: poprawić powód cenowy, kierunek opisać jak w 5.1 (ścienne, decentralne, partner albo test z próbą hałasu).</li>
+    <li><b>„Ukryte okazje”</b>: lista „Mało sklepów” jako „do sprawdzenia”, z filtrami wzrostu r/r, konwersji i koncentracji sprzedawców.</li>
+  </ol>
+  <div class="prio">Priorytet C · metoda i kontrola</div>
+  <ol class="plan" start="14">
+    <li><b>Zmiana udziału grupy w kategorii</b> jako kolumna w „Grupy” i „Profil 45 grup”.</li>
+    <li><b>Arkusz „Kontrole”</b> na wzór 18_KONTROLA: liczba raportów, kategorii i miesięcy, unikalne ID, brak zer za miesiące poza Top100, brak wzrostu z niepełnych okien, sumy kontrolne kluczowych liczb.</li>
+    <li><b>Rejestr zmian decyzji</b> względem poprzedniej wersji: grupa, było, jest, rodzaj dowodu (nowe dane albo korekta reguły).</li>
+    <li><b>Flaga rozbieżności</b> dla 282 produktów obecnych w dwóch kategoriach, z obiema wartościami.</li>
+    <li><b>Dwa mianowniki historii</b> przy sprzedaży 12 mies.: „n/12 w oknie” obok „n/17 w historii”.</li>
+    <li><b>Koncentrację sprzedawców liczyć z sezonu albo 12 miesięcy</b>, nie z VIII 2026; kategorie, w których sierpień daje poniżej 10% roku, oznaczać jako pomiar poza sezonem.</li>
+    <li><b>Wrażliwość progu konwersji</b> jak w 5.1: 1,10 / 1,25 / 1,50 daje tam 424 / 293 / 110 produktów z przewagą.</li>
+    <li><b>Ponowne pobranie 6 wadliwych eksportów</b> IV–VI 2025 (tekstylia, oświetlenie wewnętrzne).</li>
+  </ol>
+  <div class="prio">Priorytet D · prezentacja</div>
+  <ol class="plan" start="22">
+    <li><b>ID Allegro przy każdym produkcie</b> w kartach, „Liście zakupowej” i na liście spot. W puli 39 nazw powtarza się w 81 wierszach; np. „Poduszka do spania Softimi 70 x 80 cm” to dwa produkty (1,10 mln zł, w 5.1 „do sprawdzenia”, i 0,60 mln zł, w 5.1 „do wyceny”).</li>
+    <li><b>Tabela „co oznacza i czego nie oznacza”</b> przy każdej decyzji i oznaczeniu, jak w sekcji 0 raportu 5.1.</li>
+    <li><b>„Drugi, niezależny filtr”</b> w sekcji 3 zmienić na „drugi filtr, liczony z tych samych danych Top100”; niezależnym potwierdzeniem jest tylko pytanie 7 (OBI).</li>
+    <li><b>Zakres bez drugiego źródła</b>: w sekcji 10 dopisać, że dla elektryki i narzędzi ogrodniczych (125 produktów, 175 mln zł; kosy, czujniki, wertykulatory, dmuchawy, zabezpieczenia) 5.1 nie daje żadnych danych.</li>
+    <li><b>Specyfikacje 5.1</b> dla kierunków bez naszego briefu: moskitiery, odpływy liniowe, zraszacze i nawadnianie, mierniki wilgoci i wkłady, profile PV, akcesoria ogniskowe, części basenowe, segregacja odpadów.</li>
+    <li><b>Arkusz „Porównanie z v5.1”</b> zamiast porównania z v4.4: wszystkie 1 796 wspólnych produktów po ID; dopisanie do puli 9 produktów z 5.1 z utrzymaną przewagą konwersji.</li>
+  </ol>
+</section>
+<section id="prezentacja">
+  <div class="eyebrow">8 · Prezentacja</div>
+  <h2>Co wziąć z formy 5.1, a czego unikać</h2>
+  <div class="cols">
+    <div class="box"><h3><span class="k ok">wziąć</span></h3><ul>
+      <li>Krótka tabela oznaczeń na początku: co znaczy „IX25–VIII26 i n/12”, „n/17”, „Top20 w zakresie”, „do wyceny”, i czego każde z nich nie oznacza.</li>
+      <li>„Pięć pytań przed pracą z dostawcami” jako lista kontrolna; nasz odpowiednik to cztery warunki przed zamówieniem z sekcji 10, warto je podnieść na początek.</li>
+      <li>Jedno zdanie o konwersji przy każdym produkcie w karcie, z rozróżnieniem „brak porównania” od „słabsza”.</li>
+      <li>ID produktu przy każdym pokazanym wierszu i rejestr, dlaczego dany produkt trafił do karty.</li>
+      <li>Granice interpretacji przy każdej sekcji: brak w Top100 to brak obserwacji, kwoty to dolna granica sprzedaży.</li>
+    </ul></div>
+    <div class="box"><h3><span class="k warn">unikać</span></h3><ul>
+      <li>Setek kart produktów z tym samym tekstem następnego kroku.</li>
+      <li>Liczb modelowych (336 / 1 083 / 1 613) bez przełożenia na decyzję zakupową i termin.</li>
+      <li>Dokumentu bez wykresów i kalendarza, w którym czytelnik sam składa obraz sezonu.</li>
+      <li>Mylenia miar marek: przy każdej liczbie mówić, czy to Top3 marek, czy udział dużych marek.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="zalaczniki">
+  <div class="eyebrow">9 · Załączniki</div>
+  <h2>Dane do weryfikacji</h2>
+  <details open><summary>A. Sygnał konwersji 5.1 w grupach 3.5 do importu, testu i wyceny</summary>
+    <p class="note" style="margin-bottom:10px">Tylko produkty obecne w obu pulach. „Z przewagą” = utrzymana przewaga konwersji w 5.1, „słabsze” = poniżej porównania (wynik z VI–VIII 2026). Mediana indeksu 12 mies. tylko z produktów z pełnym porównaniem. Ocena: wspiera, gdy więcej z przewagą i mediana ≥1,05× (albo mediana ≥1,25× bez słabszych); ostrzega, gdy więcej słabszych i mediana &lt;1,0× (albo słabszych co najmniej 3× więcej, albo mediana &lt;0,90×); wymagane co najmniej 3 pełne porównania.</p>
+    <div class="tbl"><table class="wide"><thead><tr><th>Grupa 3.5</th><th>Decyzja 3.5</th><th class="n">Wspólne produkty</th><th class="n">5.1 do wyceny</th><th class="n">5.1 partner</th><th class="n">Z przewagą</th><th class="n">Słabsze</th><th class="n">Pełne porównania</th><th class="n">Mediana indeksu 12 mies.</th><th>Ocena</th></tr></thead>
+    <tbody><tr><td>Wentylatory (kolumnowe, podłogowe, cyrkulatory)</td><td>do importu<span class='sub'>7/7 · wysoka</span></td><td class='n'>45</td><td class='n'>11</td><td class='n'>2</td><td class='n'>2</td><td class='n'>4</td><td class='n'>11</td><td class='n'>0,89×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Regały metalowe magazynowe</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>40</td><td class='n'>0</td><td class='n'>40</td><td class='n'>5</td><td class='n'>7</td><td class='n'>32</td><td class='n'>1,04×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Nagrzewnice (olejowe, gazowe, elektryczne)</td><td>do importu<span class='sub'>7/7 · wysoka</span></td><td class='n'>39</td><td class='n'>0</td><td class='n'>39</td><td class='n'>1</td><td class='n'>1</td><td class='n'>11</td><td class='n'>1,16×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Agregaty prądotwórcze</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>38</td><td class='n'>1</td><td class='n'>36</td><td class='n'>9</td><td class='n'>3</td><td class='n'>23</td><td class='n'>1,33×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Smart home: gniazdka, przekaźniki, czujniki</td><td>do importu<span class='sub'>6/7 · średnia</span></td><td class='n'>38</td><td class='n'>19</td><td class='n'>5</td><td class='n'>7</td><td class='n'>6</td><td class='n'>21</td><td class='n'>1,12×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Naświetlacze LED, także na statywie</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>35</td><td class='n'>9</td><td class='n'>0</td><td class='n'>10</td><td class='n'>1</td><td class='n'>24</td><td class='n'>1,26×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Lampy solarne i girlandy ogrodowe</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>30</td><td class='n'>5</td><td class='n'>12</td><td class='n'>2</td><td class='n'>2</td><td class='n'>11</td><td class='n'>0,94×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Grzejniki elektryczne, konwektory, promienniki, piecyki na butlę</td><td>do importu<span class='sub'>7/7 · wysoka</span></td><td class='n'>25</td><td class='n'>0</td><td class='n'>25</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1,31×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Kołdry i poduszki</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>21</td><td class='n'>4</td><td class='n'>8</td><td class='n'>4</td><td class='n'>0</td><td class='n'>17</td><td class='n'>1,06×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Pompy ogrodowe i hydrofory</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>20</td><td class='n'>12</td><td class='n'>0</td><td class='n'>4</td><td class='n'>4</td><td class='n'>12</td><td class='n'>0,92×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Wieszaki stojące i ścienne</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>20</td><td class='n'>3</td><td class='n'>0</td><td class='n'>4</td><td class='n'>2</td><td class='n'>13</td><td class='n'>1,46×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Baterie łazienkowe (umywalkowe, wannowe, prysznicowe)</td><td>do importu<span class='sub'>6/7 · średnia</span></td><td class='n'>18</td><td class='n'>5</td><td class='n'>13</td><td class='n'>5</td><td class='n'>1</td><td class='n'>16</td><td class='n'>1,16×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Klimatyzatory przenośne</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>13</td><td class='n'>0</td><td class='n'>13</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1,59×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Przyprawniki (zestawy słoiczków)</td><td>do importu<span class='sub'>6/7 · średnia</span></td><td class='n'>8</td><td class='n'>4</td><td class='n'>0</td><td class='n'>0</td><td class='n'>3</td><td class='n'>4</td><td class='n'>0,76×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Osprzęt wentylacji i montażu klimatyzacji (anemostaty, kanały, wsporniki, pompki skroplin)</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>5</td><td class='n'>2</td><td class='n'>2</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Taśmy LED</td><td>do importu<span class='sub'>6/7 · średnia</span></td><td class='n'>5</td><td class='n'>0</td><td class='n'>5</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1,07×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Parasole ogrodowe</td><td>do importu<span class='sub'>6/7 · wysoka</span></td><td class='n'>4</td><td class='n'>0</td><td class='n'>4</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Kółka do mebli i foteli</td><td>do importu<span class='sub'>6/7 · średnia</span></td><td class='n'>4</td><td class='n'>1</td><td class='n'>0</td><td class='n'>1</td><td class='n'>0</td><td class='n'>2</td><td class='n'>1,17×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Falowniki i magazyny energii</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>37</td><td class='n'>5</td><td class='n'>24</td><td class='n'>6</td><td class='n'>8</td><td class='n'>17</td><td class='n'>1,08×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Agrowłókniny</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>31</td><td class='n'>0</td><td class='n'>31</td><td class='n'>2</td><td class='n'>6</td><td class='n'>20</td><td class='n'>1,05×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Drabiny aluminiowe</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>28</td><td class='n'>0</td><td class='n'>28</td><td class='n'>4</td><td class='n'>2</td><td class='n'>20</td><td class='n'>1,09×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Oprawy LED i plafony</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>27</td><td class='n'>20</td><td class='n'>0</td><td class='n'>8</td><td class='n'>4</td><td class='n'>24</td><td class='n'>1,09×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Lustra</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>27</td><td class='n'>9</td><td class='n'>0</td><td class='n'>3</td><td class='n'>4</td><td class='n'>16</td><td class='n'>1,00×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Grille gazowe</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>18</td><td class='n'>9</td><td class='n'>1</td><td class='n'>3</td><td class='n'>5</td><td class='n'>15</td><td class='n'>0,91×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Piły łańcuchowe</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>14</td><td class='n'>0</td><td class='n'>14</td><td class='n'>2</td><td class='n'>1</td><td class='n'>9</td><td class='n'>1,15×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Osprzęt do elektronarzędzi: tarcze, otwornice, bity</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>13</td><td class='n'>5</td><td class='n'>5</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1</td><td class='n'>0,69×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Lampki i girlandy świąteczne</td><td>test małą partią<span class='sub'>6/7 · wysoka</span></td><td class='n'>12</td><td class='n'>1</td><td class='n'>0</td><td class='n'>1</td><td class='n'>0</td><td class='n'>2</td><td class='n'>1,18×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Lasery krzyżowe (poziomice laserowe)</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>12</td><td class='n'>7</td><td class='n'>0</td><td class='n'>1</td><td class='n'>0</td><td class='n'>8</td><td class='n'>1,11×</td><td><span class='chip ok'>wspiera</span></td></tr>
+<tr><td>Zmiękczacze wody</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>12</td><td class='n'>0</td><td class='n'>12</td><td class='n'>1</td><td class='n'>4</td><td class='n'>10</td><td class='n'>0,98×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Grille węglowe</td><td>test małą partią<span class='sub'>6/7 · wysoka</span></td><td class='n'>11</td><td class='n'>5</td><td class='n'>0</td><td class='n'>2</td><td class='n'>2</td><td class='n'>7</td><td class='n'>1,21×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Odstraszacze elektroniczne (gryzonie, kuny, owady)</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>10</td><td class='n'>8</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1</td><td class='n'>9</td><td class='n'>1,11×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Baterie kuchenne</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>10</td><td class='n'>5</td><td class='n'>0</td><td class='n'>2</td><td class='n'>1</td><td class='n'>7</td><td class='n'>0,93×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Zawory i reduktory ciśnienia</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>7</td><td class='n'>3</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>5</td><td class='n'>0,87×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Akcesoria kominkowe (zestawy, kosze na drewno, turbiny)</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>7</td><td class='n'>0</td><td class='n'>2</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Szklane pojemniki na żywność i lunchboxy</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>6</td><td class='n'>1</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>1</td><td class='n'>0,65×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Drobne akcesoria łazienkowe (dozowniki, półki, uchwyty, kosze)</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>5</td><td class='n'>0</td><td class='n'>4</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Węże ogrodowe</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>4</td><td class='n'>2</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>2</td><td class='n'>0,84×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Akcesoria do fotowoltaiki: kable, złącza, profile</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>4</td><td class='n'>3</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>1</td><td class='n'>3,08×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Torby i worki wielorazowe na zakupy</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>4</td><td class='n'>0</td><td class='n'>4</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Paleniska ogrodowe</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>3</td><td class='n'>0</td><td class='n'>3</td><td class='n'>0</td><td class='n'>1</td><td class='n'>2</td><td class='n'>0,94×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Zaciskarki i praski do rur</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>3</td><td class='n'>0</td><td class='n'>3</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Bidony, butelki i lunchboxy</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>3</td><td class='n'>1</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Poziomice, suwmiarki, mierniki i testery</td><td>test małą partią<span class='sub'>5/7 · średnia</span></td><td class='n'>2</td><td class='n'>0</td><td class='n'>2</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Dmuchawy i odkurzacze do liści</td><td>test małą partią<span class='sub'>6/7 · wysoka</span></td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Wertykulatory i aeratory</td><td>test małą partią<span class='sub'>5/7 · wysoka</span></td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Pudełka i organizery z tworzywa</td><td>do wyceny<span class='sub'>6/7 · wysoka</span></td><td class='n'>26</td><td class='n'>20</td><td class='n'>0</td><td class='n'>4</td><td class='n'>5</td><td class='n'>21</td><td class='n'>1,04×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Piece wolnostojące (kozy)</td><td>do wyceny<span class='sub'>5/7 · wysoka</span></td><td class='n'>18</td><td class='n'>0</td><td class='n'>18</td><td class='n'>1</td><td class='n'>0</td><td class='n'>7</td><td class='n'>1,00×</td><td><span class='chip neu'>neutralne</span></td></tr>
+<tr><td>Klimatyzatory split</td><td>do wyceny<span class='sub'>4/7 · wysoka</span></td><td class='n'>18</td><td class='n'>0</td><td class='n'>18</td><td class='n'>0</td><td class='n'>5</td><td class='n'>9</td><td class='n'>0,64×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Słoiki do przetworów i zakrętki</td><td>do wyceny<span class='sub'>6/7 · wysoka</span></td><td class='n'>16</td><td class='n'>2</td><td class='n'>0</td><td class='n'>1</td><td class='n'>0</td><td class='n'>2</td><td class='n'>2,06×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Rury (wodne, PEX, drenarskie)</td><td>do wyceny<span class='sub'>5/7 · wysoka</span></td><td class='n'>8</td><td class='n'>6</td><td class='n'>0</td><td class='n'>1</td><td class='n'>2</td><td class='n'>8</td><td class='n'>0,95×</td><td><span class='chip warn'>ostrzega</span></td></tr>
+<tr><td>Panele fotowoltaiczne</td><td>do wyceny<span class='sub'>5/7 · wysoka</span></td><td class='n'>7</td><td class='n'>0</td><td class='n'>7</td><td class='n'>0</td><td class='n'>2</td><td class='n'>2</td><td class='n'>0,25×</td><td><span class='chip na'>za mało porównań</span></td></tr>
+<tr><td>Ogrzewanie podłogowe wodne (rury, płyty, folie)</td><td>do wyceny<span class='sub'>5/7 · wysoka</span></td><td class='n'>4</td><td class='n'>2</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>0</td><td class='n'>–</td><td><span class='chip na'>za mało porównań</span></td></tr></tbody></table></div>
+  </details>
+  <details><summary>B. 24 produkty z naszych kart grup ze słabszą konwersją w 5.1</summary>
+    <p class="note" style="margin-bottom:10px">Status 5.1 „poniżej porównania” oznacza indeks VI–VIII 2026 poniżej 0,80× przy pełnych danych. 15 z tych 24 produktów 5.1 nadal kwalifikuje „do wyceny”: słabsza konwersja wymaga wyjaśnienia, a nie automatycznie odrzucenia.</p>
+    <div class="tbl"><table class="wide"><thead><tr><th>Produkt</th><th>Grupa 3.5</th><th>Decyzja</th><th>Kwalifikacja 5.1</th><th class="n">Indeks 12 mies.</th><th class="n">Indeks 3 mies.</th><th class="n">Sprzedaż 12 mies., mln zł</th></tr></thead>
+    <tbody><tr><td>Zmiękczacz Water Technic 32 smart 32 l</td><td>Zmiękczacze wody</td><td>test</td><td>Partner / producent</td><td class='n'>0,85</td><td class='n'>0,77</td><td class='n'>1,81</td></tr>
+<tr><td>Grill gazowy Lehmann 9 kW</td><td>Grille gazowe</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,64</td><td class='n'>0,69</td><td class='n'>1,13</td></tr>
+<tr><td>Grill gazowy Lehmann Ohio 4+1 żeliwny ruszt pokrowiec</td><td>Grille gazowe</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,73</td><td class='n'>0,78</td><td class='n'>1,12</td></tr>
+<tr><td>Grill węglowy Berdsen 42 x 31,5 cm ruszt żeliwny + termometr</td><td>Grille węglowe</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,66</td><td class='n'>0,74</td><td class='n'>1,06</td></tr>
+<tr><td>Zmiękczacz Aquafit Regular 27 l</td><td>Zmiękczacze wody</td><td>test</td><td>Partner / producent</td><td class='n'>0,91</td><td class='n'>0,48</td><td class='n'>0,99</td></tr>
+<tr><td>Odstraszacz przeciwko gryzoniom, kunom, myszom, szczurom Viano 0,2 kg</td><td>Odstraszacze elektroniczne (gryzonie, kuny, owady)</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,82</td><td class='n'>0,80</td><td class='n'>0,97</td></tr>
+<tr><td>Geowłóknina ściółkująca crys-x geo biały 200 g/m² 200 x 5000 cm</td><td>Agrowłókniny</td><td>test</td><td>Partner / producent</td><td class='n'>0,86</td><td class='n'>0,77</td><td class='n'>0,97</td></tr>
+<tr><td>Pompa zestaw hydroforowy Einbach 1100 W 3600 l/h</td><td>Pompy ogrodowe i hydrofory</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,73</td><td class='n'>0,68</td><td class='n'>0,91</td></tr>
+<tr><td>Grill węglowy KÖLER 58,5 x 42,5 cm</td><td>Grille węglowe</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,70</td><td class='n'>0,63</td><td class='n'>0,73</td></tr>
+<tr><td>Magazyn energii HumsiENK 10200 W 20.48 kWh 48V LiFePO4</td><td>Falowniki i magazyny energii</td><td>test</td><td>Partner / producent</td><td class='n'>0,46</td><td class='n'>0,36</td><td class='n'>0,72</td></tr>
+<tr><td>Sterownik rolet Sone WiFi zasilany sieciowo kompaktowy V3</td><td>Smart home: gniazdka, przekaźniki, czujniki</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,62</td><td class='n'>0,61</td><td class='n'>0,66</td></tr>
+<tr><td>Pompa zestaw hydroforowy Einbach 1300 W 6000 l/h</td><td>Pompy ogrodowe i hydrofory</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,70</td><td class='n'>0,69</td><td class='n'>0,62</td></tr>
+<tr><td>Girlanda ogrodowa Smartled 2000 cm 20 żarówek LED biały ciepły wodoodporna</td><td>Lampy solarne i girlandy ogrodowe</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,65</td><td class='n'>0,65</td><td class='n'>0,60</td></tr>
+<tr><td>Agrotkanina 135 g/m2 czarna 1,1x50 m Premium UV 3% agrowłóknina Linarem</td><td>Agrowłókniny</td><td>test</td><td>Partner / producent</td><td class='n'>0,74</td><td class='n'>0,65</td><td class='n'>0,60</td></tr>
+<tr><td>Falownik inwerter hybrydowy Off-Grid 6.2 / 12kW 48V WiFi AutoKomp</td><td>Falowniki i magazyny energii</td><td>test</td><td>Partner / producent</td><td class='n'>0,56</td><td class='n'>0,54</td><td class='n'>0,57</td></tr>
+<tr><td>Gockowiak Zestaw 24 słoiczków na przyprawy Baker szkło słoiki i zakrętki</td><td>Przyprawniki (zestawy słoiczków)</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,85</td><td class='n'>0,74</td><td class='n'>0,51</td></tr>
+<tr><td>Palenisko Ogrodowe Grill Trójnóg Lehmann ze Stelażem i Rusztem 60 cm</td><td>Paleniska ogrodowe</td><td>test</td><td>Partner / producent</td><td class='n'>0,73</td><td class='n'>0,79</td><td class='n'>0,45</td></tr>
+<tr><td>Pojemnik na żywność Kadax szklany zestaw 12 szt. 6,75 l zmywarka/mikrofala</td><td>Szklane pojemniki na żywność i lunchboxy</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,65</td><td class='n'>0,51</td><td class='n'>0,43</td></tr>
+<tr><td>Pojemniki na przyprawy 24szt słoiczki słoiki przyprawnik organizer naklejki</td><td>Przyprawniki (zestawy słoiczków)</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,62</td><td class='n'>0,62</td><td class='n'>0,42</td></tr>
+<tr><td>Lustro łazienkowe LED podświetlane Save Home ścienne okrągłe 60 cm</td><td>Lustra</td><td>test</td><td>Do wyceny teraz</td><td class='n'>0,69</td><td class='n'>0,72</td><td class='n'>0,38</td></tr>
+<tr><td>Grill gazowy Velaco 17,5 kW</td><td>Grille gazowe</td><td>test</td><td>Do sprawdzenia</td><td class='n'>0,87</td><td class='n'>0,78</td><td class='n'>0,35</td></tr>
+<tr><td>Stojak na przyprawy 24 szklane słoiczki + 144 naklejki – organizer kuchenny</td><td>Przyprawniki (zestawy słoiczków)</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,66</td><td class='n'>0,54</td><td class='n'>0,31</td></tr>
+<tr><td>Wieszak stojący metal ARVENTA STYLE czarny</td><td>Wieszaki stojące i ścienne</td><td>import</td><td>Do wyceny teraz</td><td class='n'>0,83</td><td class='n'>0,79</td><td class='n'>0,29</td></tr>
+<tr><td>Bateria kuchenna stojąca Granitan Fluo czarny</td><td>Baterie kuchenne</td><td>test</td><td>Do sprawdzenia</td><td class='n'>0,67</td><td class='n'>0,59</td><td class='n'>0,22</td></tr></tbody></table></div>
+  </details>
+  <details><summary>C. 36 kandydatów na wzory: utrzymana przewaga konwersji, bez dużej marki, grupy do importu i testu, dziś poza kartami</summary>
+    <p class="note" style="margin-bottom:10px">Wszystkie są w naszej puli 17M; karty z założenia pokazują tylko kilku liderów grupy.</p>
+    <div class="tbl"><table class="wide"><thead><tr><th>Produkt</th><th>Grupa 3.5</th><th>Decyzja</th><th>Kwalifikacja 5.1</th><th class="n">Indeks 12 mies.</th><th class="n">Indeks 3 mies.</th><th class="n">Sprzedaż 12 mies., mln zł</th></tr></thead>
+    <tbody><tr><td>Agregat prądotwórczy przenośny trójfazowy Kowal Polska 8500 W + olej</td><td>Agregaty prądotwórcze</td><td>import</td><td>Partner / producent</td><td class='n'>1,34</td><td class='n'>1,64</td><td class='n'>1,34</td></tr>
+<tr><td>Agregat prądotwórczy przenośny jednofazowy Toolme 2500 W benzyna</td><td>Agregaty prądotwórcze</td><td>import</td><td>Partner / producent</td><td class='n'>1,63</td><td class='n'>1,42</td><td class='n'>1,00</td></tr>
+<tr><td>Agregat prądotwórczy Toolme TM602 przenośny jednofazowy 4200 W benzyna</td><td>Agregaty prądotwórcze</td><td>import</td><td>Partner / producent</td><td class='n'>2,45</td><td class='n'>2,41</td><td class='n'>0,88</td></tr>
+<tr><td>Regał magazynowy metalowy Thomas 180 x 90 x 40 cm max 175 kg na półkę</td><td>Regały metalowe magazynowe</td><td>import</td><td>Partner / producent</td><td class='n'>1,31</td><td class='n'>1,15</td><td class='n'>0,86</td></tr>
+<tr><td>Regał metalowy magazynowy 2w1 5 półek garażowy 180x90x40cm 750kg Rebel</td><td>Regały metalowe magazynowe</td><td>import</td><td>Partner / producent</td><td class='n'>1,27</td><td class='n'>1,12</td><td class='n'>0,82</td></tr>
+<tr><td>MXR3800 cichy agregat prądotwórczy inwertorowy 3,5kW MaXpeedingrods</td><td>Agregaty prądotwórcze</td><td>import</td><td>Partner / producent</td><td class='n'>1,30</td><td class='n'>1,39</td><td class='n'>0,72</td></tr>
+<tr><td>DEKRAFT GRILL GAZOWY 3+1 PALNIKI RUSZT ŻELIWNY SZAFKA NA BUTLĘ (NEBRASKA)</td><td>Grille gazowe</td><td>test</td><td>Do sprawdzenia</td><td class='n'>1,70</td><td class='n'>1,71</td><td class='n'>0,62</td></tr>
+<tr><td>Zmiękczacz Watermarket HYDRO PREMIUM 32 l</td><td>Zmiękczacze wody</td><td>test</td><td>Partner / producent</td><td class='n'>1,68</td><td class='n'>2,14</td><td class='n'>0,61</td></tr>
+<tr><td>Grill gazowy Viben 13,7 kW</td><td>Grille gazowe</td><td>test</td><td>Do sprawdzenia</td><td class='n'>1,34</td><td class='n'>1,55</td><td class='n'>0,60</td></tr>
+<tr><td>Pompa głębinowa Magnum 3200 W 20000 l/h</td><td>Pompy ogrodowe i hydrofory</td><td>import</td><td>Do wyceny teraz</td><td class='n'>1,25</td><td class='n'>1,33</td><td class='n'>0,59</td></tr>
+<tr><td>Drabina wielofunkcyjna Higher aluminiowa 3-elementowa do 150 kg</td><td>Drabiny aluminiowe</td><td>test</td><td>Partner / producent</td><td class='n'>1,55</td><td class='n'>1,50</td><td class='n'>0,51</td></tr>
+<tr><td>Oprawa oświetleniowa sufitowa natynkowa Lumiled do garażu warsztatu</td><td>Oprawy LED i plafony</td><td>test</td><td>Do wyceny teraz</td><td class='n'>1,53</td><td class='n'>1,27</td><td class='n'>0,48</td></tr>
+<tr><td>Wentylator podłogowy HRX duży wiatrak przemysłowy mocny 130W aż 50cm chrom</td><td>Wentylatory (kolumnowe, podłogowe, cyrkulatory)</td><td>import</td><td>Do wyceny teraz</td><td class='n'>1,37</td><td class='n'>1,27</td><td class='n'>0,47</td></tr>
+<tr><td>Drabina Higher aluminium 1 x 6 do 150 kg</td><td>Drabiny aluminiowe</td><td>test</td><td>Partner / producent</td><td class='n'>1,46</td><td class='n'>1,56</td><td class='n'>0,47</td></tr>
+<tr><td>Agregat prądotwórczy przenośny Könner &amp; Söhnen KS 4500iG 4500 W benzyna</td><td>Agregaty prądotwórcze</td><td>import</td><td>Partner / producent</td><td class='n'>1,98</td><td class='n'>1,32</td><td class='n'>0,44</td></tr>
+<tr><td>Poduszka do spania Softimi 40 x 40 cm</td><td>Kołdry i poduszki</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,43</td><td class='n'>1,47</td><td class='n'>0,40</td></tr>
+<tr><td>Naświetlacz LED Smartled 50W czarny z czujnikiem ruchu IP65 4500K</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do wyceny teraz</td><td class='n'>1,36</td><td class='n'>1,36</td><td class='n'>0,40</td></tr>
+<tr><td>Regał metalowy Landgraf 5 półek 180x90x40 cm max 175 kg</td><td>Regały metalowe magazynowe</td><td>import</td><td>Partner / producent</td><td class='n'>1,81</td><td class='n'>1,31</td><td class='n'>0,39</td></tr>
+<tr><td>Drabina Higher aluminium 1 x 7 do 150 kg</td><td>Drabiny aluminiowe</td><td>test</td><td>Partner / producent</td><td class='n'>1,62</td><td class='n'>1,45</td><td class='n'>0,35</td></tr>
+<tr><td>Lampa solarna wbijana Smartled czarny 30 cm 1 szt.</td><td>Lampy solarne i girlandy ogrodowe</td><td>import</td><td>Partner / producent</td><td class='n'>1,27</td><td class='n'>1,20</td><td class='n'>0,34</td></tr>
+<tr><td>Lampa na stojaku Masterled 200 W 2 źródła światła czarna IP65</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,32</td><td class='n'>1,24</td><td class='n'>0,32</td></tr>
+<tr><td>Lampa solarna wbijana Gardlov biały 35 cm 12 szt.</td><td>Lampy solarne i girlandy ogrodowe</td><td>import</td><td>Partner / producent</td><td class='n'>1,55</td><td class='n'>1,58</td><td class='n'>0,31</td></tr>
+<tr><td>Nagrzewnica wodna NeoAir EVO26 - 26kw + uchwyt + sterownik z termostatem</td><td>Nagrzewnice (olejowe, gazowe, elektryczne)</td><td>import</td><td>Partner / producent</td><td class='n'>1,36</td><td class='n'>2,83</td><td class='n'>0,31</td></tr>
+<tr><td>Lampa na stojaku Smartled 100 W czarna LED IP65 11000 lm 4500 K</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,28</td><td class='n'>1,12</td><td class='n'>0,29</td></tr>
+<tr><td>Agrowłóknina ściółkująca (przeciw chwastom) czarny 5000 x 110 cm 90 g/m²</td><td>Agrowłókniny</td><td>test</td><td>Partner / producent</td><td class='n'>1,64</td><td class='n'>1,48</td><td class='n'>0,27</td></tr>
+<tr><td>Lustro LED owalne podświetlane wymiar 1000 mm x 500 mm ścienne Glass Buster</td><td>Lustra</td><td>test</td><td>Do wyceny teraz</td><td class='n'>1,30</td><td class='n'>1,32</td><td class='n'>0,27</td></tr>
+<tr><td>Lustro dosmo stojące prostokąt 80 x 63 mm</td><td>Lustra</td><td>test</td><td>Do sprawdzenia</td><td class='n'>1,76</td><td class='n'>1,72</td><td class='n'>0,26</td></tr>
+<tr><td>Wieszak na ubrania Sepio czarny plastikowy wiszący obrotowy 100 szt.</td><td>Wieszaki stojące i ścienne</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,75</td><td class='n'>1,40</td><td class='n'>0,25</td></tr>
+<tr><td>Naświetlacz LED 200W LEDSOURCE czarny IP66 4500K 9000 lm</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,51</td><td class='n'>1,35</td><td class='n'>0,24</td></tr>
+<tr><td>Oprawa oświetleniowa sufitowa natynkowa DLED 36 W LED 121,5 cm</td><td>Oprawy LED i plafony</td><td>test</td><td>Do sprawdzenia</td><td class='n'>1,29</td><td class='n'>1,20</td><td class='n'>0,23</td></tr>
+<tr><td>Naświetlacz LED LEDSOURCE 11000 lm IP66 100 W czarny neutralny</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,38</td><td class='n'>1,40</td><td class='n'>0,23</td></tr>
+<tr><td>Wieszak welurowy Ogivo czarny 50 szt. antypoślizgowy</td><td>Wieszaki stojące i ścienne</td><td>import</td><td>Do sprawdzenia</td><td class='n'>1,59</td><td class='n'>1,49</td><td class='n'>0,20</td></tr>
+<tr><td>Naświetlacz LED Masterled 100W 4500K czarny przenośny IP65</td><td>Naświetlacze LED, także na statywie</td><td>import</td><td>Do wyceny teraz</td><td class='n'>1,29</td><td class='n'>1,37</td><td class='n'>0,20</td></tr>
+<tr><td>Lustro ścienne Save Home okrągłe LED 80 cm czarna matowa z ramą metalową</td><td>Lustra</td><td>test</td><td>Do sprawdzenia</td><td class='n'>1,32</td><td class='n'>1,42</td><td class='n'>0,18</td></tr>
+<tr><td>Oprawa oświetleniowa sufitowa natynkowa Berge 18 W G13 60 cm biały</td><td>Oprawy LED i plafony</td><td>test</td><td>Do wyceny teraz</td><td class='n'>1,26</td><td class='n'>1,72</td><td class='n'>0,15</td></tr>
+<tr><td>Oprawa oświetleniowa podtynkowa LEDLUX czarna kwadratowa 5,5 W GU10</td><td>Oprawy LED i plafony</td><td>test</td><td>Do wyceny teraz</td><td class='n'>1,36</td><td class='n'>1,18</td><td class='n'>0,10</td></tr></tbody></table></div>
+  </details>
+  <details><summary>D. Jak to policzyliśmy</summary>
+    <div class="prose" style="display:grid;gap:10px;font-size:15px">
+      <p>Źródła: Radar_Executive_v5_1.docx, Radar_Evidence_Book_v5_1.docx, Radar_Product_Master_v5_1.xlsx; Radar_importu_z_Chin_v3_5.html i Product_Radar_v3_5_dane.xlsx.</p>
+      <p>Produkty łączyliśmy po ID produktu Allegro: arkusz 13_PULA_KANDYDATOW raportu 5.1 (3 032) z arkuszem „Pula 17M” raportu 3.5 (2 950); wspólnych jest 1 796. Grupę i decyzję 3.5 bierzemy z kolumn „Grupa produktów lub typ” i „Rekomendacja grupy lub typu”, konwersję 5.1 z kolumn „Ocena konwersji” i „Indeks konwersji 12m / 3m”. Produkty z kart grup (281 pozycji) przypisaliśmy do ID w obrębie grupy, przy powtórzonych nazwach według sprzedaży; listę „Mało sklepów” (79) po ID. Kategorie dopasowaliśmy po sprzedaży Top100 w VIII 2026 (49 z 49).</p>
+      <p>Weryfikacja: dwie rundy niezależnych obliczeń na surowych plikach, z zadaniem obalenia każdej tezy, oraz dwa przeglądy całych raportów w poszukiwaniu pominiętych wątków. Tezy, których nie dało się potwierdzić, poprawiliśmy albo usunęliśmy.</p>
+      <p>Ograniczenia: ocena grup opiera się tylko na produktach obecnych w obu pulach; indeks konwersji 5.1 jest obserwacyjny i nie kontroluje ruchu, reklamy ani opinii; obie metody konwersji są pokrewne, więc ich zgodność nie jest w pełni niezależnym dowodem; Top3 marek w 5.1 pochodzi z heurystyki tytułów.</p>
+    </div>
+  </details>
+  <p class="note">Stan danych: Allegro Top100 IV 2025 – VIII 2026. Kwoty to sprzedaż widoczna w listach Top100, nie cały rynek.</p>
+</section>
+</div>
