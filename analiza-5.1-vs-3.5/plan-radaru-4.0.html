@@ -1,0 +1,394 @@
+<title>Plan zmian Radaru 4.0</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: jedna kolumna tekstu ~70 znaków, szerokie tabele w przewijanych ramkach; paleta i kroje z raportu 3.5 */
+:root{
+  --bg:#f3f4f1; --surface:#fcfcfb; --surface-2:#eaece6; --ink:#13171b; --ink-2:#474c52; --muted:#6c706c;
+  --line:#dcded7; --line-2:#c7c9c0; --accent:#1d5a86; --accent-soft:#dce8f1;
+  --ok:#0f7a52; --ok-soft:#dcf2e8; --warn:#9a5b00; --warn-soft:#fbefcf; --bad:#b3261e; --bad-soft:#f8e1de; --neu-soft:#ecebe7;
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark; --bg:#111315; --surface:#1a1c1e; --surface-2:#24272a; --ink:#f1f2ee; --ink-2:#c4c6c0; --muted:#979a95;
+  --line:#2d3034; --line-2:#3b3f43; --accent:#7fb3dd; --accent-soft:#1d2d3a;
+  --ok:#4cc38a; --ok-soft:#16312a; --warn:#e3a43a; --warn-soft:#342a12; --bad:#f07068; --bad-soft:#3a1d1b; --neu-soft:#2a2b2a;}}
+:root[data-theme="dark"]{
+  color-scheme:dark; --bg:#111315; --surface:#1a1c1e; --surface-2:#24272a; --ink:#f1f2ee; --ink-2:#c4c6c0; --muted:#979a95;
+  --line:#2d3034; --line-2:#3b3f43; --accent:#7fb3dd; --accent-soft:#1d2d3a;
+  --ok:#4cc38a; --ok-soft:#16312a; --warn:#e3a43a; --warn-soft:#342a12; --bad:#f07068; --bad-soft:#3a1d1b; --neu-soft:#2a2b2a;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.62 var(--f-body);margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding-block:40px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.prose{max-width:70ch}
+a{color:var(--accent);text-underline-offset:3px}
+h1,h2,h3{font-family:var(--f-display);font-stretch:108%;text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(30px,4.6vw,46px);font-weight:760;letter-spacing:-.01em}
+h2{font-size:clamp(23px,2.8vw,30px);font-weight:720;margin-top:8px}
+h3{font-size:19px;font-weight:680}
+.eyebrow{font:500 12px/1.4 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lead{font-size:18px;color:var(--ink-2);max-width:66ch}
+section{display:grid;gap:16px;padding-top:44px;margin-top:44px;border-top:1px solid var(--line)}
+section>*{min-width:0}
+p{margin:0}
+.toc{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:14px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:6px;align-content:start}
+.tile b{font:700 30px/1 var(--f-display);font-stretch:110%;font-variant-numeric:tabular-nums}
+.tile span{font-size:14px;color:var(--ink-2)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px;display:grid;gap:10px;align-content:start}
+.box h3{display:flex;gap:8px;align-items:center}
+.box ul{margin:0;padding-left:18px;display:grid;gap:7px;font-size:15px}
+.k{font:500 11px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 7px;border-radius:4px;white-space:nowrap}
+.k.ok{background:var(--ok-soft);color:var(--ok)} .k.warn{background:var(--warn-soft);color:var(--warn)} .k.add{background:var(--accent-soft);color:var(--accent)} .k.str{background:var(--neu-soft);color:var(--ink-2)}
+.case{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:6px 10px 10px 6px;padding:16px 18px;display:grid;gap:10px}
+.case.ok{border-left-color:var(--ok)}
+.case dl{display:grid;grid-template-columns:minmax(110px,150px) 1fr;gap:6px 14px;margin:0;font-size:15px}
+.case dt{font:500 12px/1.5 var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em;padding-top:2px}
+.case dd{margin:0}
+@media (max-width:560px){.case dl{grid-template-columns:1fr}.case dt{padding-top:6px}}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:8px 10px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{font:500 11.5px/1.35 var(--f-mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--surface-2);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .sub{display:block;font-size:12px;color:var(--muted)}
+.chip{display:inline-block;font:500 11.5px/1 var(--f-mono);padding:4px 7px;border-radius:999px;white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)} .chip.warn{background:var(--warn-soft);color:var(--warn)} .chip.neu{background:var(--neu-soft);color:var(--ink-2)} .chip.na{border:1px solid var(--line-2);color:var(--muted)}
+.wide{min-width:760px}
+.note{font-size:14px;color:var(--muted)}
+ol.plan{margin:0;padding-left:22px;display:grid;gap:10px}
+ol.plan li::marker{font:600 14px var(--f-mono);color:var(--muted)}
+.prio{font:500 11px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent);margin-top:6px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 16px}
+details summary{cursor:pointer;font-weight:600}
+details[open] summary{margin-bottom:10px}
+code{font:13px var(--f-mono);background:var(--surface-2);padding:1px 5px;border-radius:4px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+<style>
+.item{display:grid;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.item h3{font-size:17px;display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.item h3 .id{font:600 12px/1 var(--f-mono);color:var(--accent);background:var(--accent-soft);padding:4px 6px;border-radius:4px}
+.item dl{display:grid;grid-template-columns:minmax(100px,130px) 1fr;gap:5px 14px;margin:0;font-size:15px}
+.item dt{font:500 11.5px/1.6 var(--f-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.item dd{margin:0}
+@media (max-width:560px){.item dl{grid-template-columns:1fr}}
+.stack{display:grid;gap:12px}
+.verdict td:first-child{font-weight:600}
+</style>
+<div class="wrap">
+<header style="display:grid;gap:14px">
+  <div class="eyebrow">Product Radar · z wersji 3.5 do 4.0 · stan na 20.10.2026</div>
+  <h1>Plan zmian Radaru 4.0</h1>
+  <p class="lead">Ostateczna lista poprawek do raportu „Radar importu z Chin” po porównaniu z raportem zewnętrznym 5.1. Bierzemy z 5.1 to, co ma najlepsze (indeks konwersji, liczenie terminów wstecz, model dostaw, kontrole i rejestr zmian, specyfikacje), poprawiamy wszystko, co wyszło z analizy, i zostawiamy to, w czym 3.5 jest lepsze. Każda pozycja mówi, co zmienić, dlaczego, jak i gdzie w raporcie.</p>
+  <nav class="toc" aria-label="Spis treści">
+    <a href="#weryfikacja">Czy wnioski są słuszne</a><a href="#pilne">Przed wersją 4.0</a><a href="#dane">Dane</a><a href="#metoda">Metoda</a><a href="#decyzje">Decyzje</a><a href="#tezy">Tezy</a><a href="#prezentacja">Prezentacja</a><a href="#nie">Czego nie brać z 5.1</a><a href="#harmonogram">Harmonogram</a><a href="#terminy">Tabela terminów</a>
+  </nav>
+  <div class="tiles" style="margin-top:8px">
+    <div class="tile"><b>36 z 42</b><span>terminów sezonowych w 3.5 jest za późnych nawet przy założeniach samego 3.5, jeśli zamówienie padnie na końcu podanego terminu</span></div>
+    <div class="tile"><b>18</b><span>pozycji decyzyjnych do przeglądu; dwie zmieniają rekomendację, reszta dostaje warunek, inną pewność albo nowy termin</span></div>
+    <div class="tile"><b>10</b><span>zmian metody, w tym indeks konwersji, terminy liczone wstecz, model dostaw i pewność z oceną danych o wzroście</span></div>
+    <div class="tile"><b>25.10</b><span>termin zamówień spot na święta z 3.5; decyzję o czujnikach czadu trzeba podjąć przed wersją 4.0</span></div>
+  </div>
+</header>
+
+<section id="weryfikacja">
+  <div class="eyebrow">1 · Ponowna ocena wniosków</div>
+  <h2>Czy wnioski z analizy są słuszne</h2>
+  <p class="prose">Każdy wniosek sprawdziłem jeszcze raz pod kątem założeń i wielkości próby. Większość się utrzymuje, pięć wymaga złagodzenia, jeden jest mocniejszy, niż pisałem.</p>
+  <div class="tbl"><table class="wide verdict">
+    <thead><tr><th style="width:230px">Wniosek</th><th style="width:120px">Ocena</th><th>Uzasadnienie</th></tr></thead>
+    <tbody>
+      <tr><td>Terminy zamówień są za późne</td><td><span class="chip ok">mocniejszy</span></td><td>Przy założeniach samego 3.5 (16 tygodni, bez bufora, towar na pierwszy dzień miesiąca szczytu) zamówienie na końcu terminu jest za późne w 36 z 42 pozycji sezonowych. Przy 17 tygodniach z odprawą i buforem w 38 z 42. W porządku są tylko grupy zimowe z sekcji 2 (nagrzewnice, grzejniki, akcesoria kominkowe).</td></tr>
+      <tr><td>Dane obu raportów są te same</td><td><span class="chip ok">utrzymany</span></td><td>Zgodność 47 z 47 kategorii i 99% produktów. To ten sam eksport, więc nie jest to niezależne potwierdzenie rynku.</td></tr>
+      <tr><td>Pula 17M jest kompletna, znak konwersji się broni</td><td><span class="chip ok">utrzymany</span></td><td>336 z 336; 32 produkty z utrzymaną przewagą, 0 ze słabszą. Metody są pokrewne, więc zgodność jest spodziewana.</td></tr>
+      <tr><td>Filtr importu, lista marek, wzrost r/r: 3.5 lepsze</td><td><span class="chip ok">utrzymany</span></td><td>Artefakt marek w regałach (24 marki, Top3 = 100%) to mocne, ale pośrednie wnioskowanie; w Masterze 5.1 nie ma pola z rozpoznaną marką.</td></tr>
+      <tr><td>Wzrost z 30 dni przy wysokiej pewności</td><td><span class="chip neu">złagodzony</span></td><td>Dla grup zimowych okres IV–VIII to poza sezonem, więc reguła 30 dni jest rozsądna. Nagrzewnice, agregaty i naświetlacze przechodzą próg w obu oknach. Problem dotyczy grzejników (IV–VIII +1,9%) i przyprawników (+9,1%) oraz kołder (tylko VII–VIII). Rozwiązaniem są dane IX–X 2026, które są już dostępne.</td></tr>
+      <tr><td>Grupy tracą udział w kategorii</td><td><span class="chip neu">złagodzony</span></td><td>To ostrzeżenie, nie powód zmiany decyzji. Dla klimatyzatorów przenośnych i osprzętu wentylacji punkt odniesienia zawyża klimatyzacja split (+206%), dla laserów niwelatory dodane w III 2026. Wiarygodne przypadki: pompy ogrodowe (−8,5 pkt) i baterie łazienkowe (−7,2 pkt).</td></tr>
+      <tr><td>Trzech sprzedawców ma ponad 60% w 6 z 18 grup</td><td><span class="chip neu">złagodzony</span></td><td>Miara z 5.1 pochodzi z sierpnia i z podgrup. Dla grzejników (sierpień poza sezonem), parasoli (4 produkty) i osprzętu wentylacji (5 produktów) to tylko sygnał do sprawdzenia. Wiarygodniej: lampy solarne i girlandy (76%, 30 produktów) i wieszaki (60%, 20 produktów).</td></tr>
+      <tr><td>Konwersja potwierdza smart home</td><td><span class="chip neu">złagodzony</span></td><td>7 produktów z przewagą wobec 6 słabszych to słabe wsparcie. Wentylatory mają medianę 0,89×, ale tylko 11 z 45 produktów ma pełne porównanie; to ostrzeżenie przy wyborze modelu, nie przy decyzji o grupie.</td></tr>
+      <tr><td>Czujniki czadu na liście spot</td><td><span class="chip neu">złagodzony</span></td><td>3.5 już wymaga certyfikatu EN i szybkiego testu. Proponowana zmiana to zaostrzenie: zakup tylko od dystrybutora z gotowym certyfikatem, bo dwa tygodnie nie wystarczą na weryfikację dokumentów fabryki.</td></tr>
+      <tr><td>Ochraniacze na materac</td><td><span class="chip ok">utrzymany</span></td><td>Odpadają o 1 667 zł na progu 500 tys. zł. Ich wzrost (+69%) też pochodzi z 2 miesięcy, dlatego proponujemy pełny test, a nie import.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="pilne">
+  <div class="eyebrow">2 · Przed wersją 4.0</div>
+  <h2>Cztery decyzje, które nie mogą czekać</h2>
+  <div class="stack">
+    <div class="item"><h3><span class="id">P1</span>Spot na święta do ok. 25.10.2026</h3><dl>
+      <dt>Co</dt><dd>Zamawiać tylko gotowy towar z kompletem dokumentów (CE, instrukcja po polsku). Czujniki czadu i dymu wyłącznie od dystrybutora z certyfikatem EN 50291 / EN 14604 albo wcale.</dd>
+      <dt>Dlaczego</dt><dd>Czujniki przeszły tylko wstępną ocenę (5 z 6, wzrost r/r nieznany), a pełny test 3.5 planuje po I 2027. 5.1: „bez kompromisu jakościowego”.</dd>
+    </dl></div>
+    <div class="item"><h3><span class="id">P2</span>Dane od dostawców na targach Canton (do 4.11.2026)</h3><dl>
+      <dt>Co</dt><dd>Od każdego dostawcy z grup do importu i testu: czas produkcji, czas do portu, MOQ, przestój w chiński Nowy Rok (6.02.2027), certyfikaty, koszt serwisu i części dla urządzeń.</dd>
+      <dt>Dlaczego</dt><dd>To parametry nowej metody terminów (M1) i modelu dostaw (M6). 5.1 słusznie zauważa, że dane sprzedaży ich nie zawierają.</dd>
+    </dl></div>
+    <div class="item"><h3><span class="id">P3</span>Grupy z sezonem od lutego 2027</h3><dl>
+      <dt>Co</dt><dd>Piły łańcuchowe, wertykulatory, falowniki, akcesoria PV oraz typy tunele foliowe, nożyce i sekatory, szklarnie, glebogryzarki, panele PV: rozstrzygnąć teraz, czy kolej, część sezonu, czy sezon 2028.</dd>
+      <dt>Dlaczego</dt><dd>Przy 17 tygodniach morski termin minął 5.10.2026; nawet przy 13 tygodniach mija 2.11.2026, przed planowaną decyzją w XI 2026.</dd>
+    </dl></div>
+    <div class="item"><h3><span class="id">P4</span>Dane IX–X 2026 i naprawa wadliwych plików</h3><dl>
+      <dt>Co</dt><dd>Pobrać raporty miesięczne Top100 za IX 2026 (i X 2026, gdy będzie) dla 51 kategorii oraz ponownie 6 wadliwych eksportów IV–VI 2025 (tekstylia, oświetlenie wewnętrzne).</dd>
+      <dt>Dlaczego</dt><dd>IX–X dają wzrost r/r pierwszych miesięcy zimy na pełnych miesiącach zamiast 30 dni i potwierdzają nowe produkty. Naprawione pliki dają pełne IV–VIII r/r i 17 miesięcy historii dla kołder, taśm LED, plafonów i ochraniaczy. Raport 5.1 też nie ma IX 2026.</dd>
+    </dl></div>
+  </div>
+</section>
+<section id="dane">
+  <div class="eyebrow">3 · Dane</div>
+  <h2>Co dołożyć do danych wersji 4.0</h2>
+  <div class="stack">
+    <div class="item"><h3><span class="id">D1</span>Raporty IX 2026 i X 2026 dla 51 kategorii</h3><dl>
+      <dt>Po co</dt><dd>Wzrost r/r grup zimowych na pełnych miesiącach (zamiast 30 dni), potwierdzenie nowych produktów i końca sezonu letniego. Rozstrzyga grzejniki, przyprawniki, kołdry i oprawy LED.</dd>
+      <dt>Gdzie</dt><dd>Test 7 pytań (pytanie 2), „Nowe produkty”, karty grup, sekcja 11.</dd></dl></div>
+    <div class="item"><h3><span class="id">D2</span>Ponowne pobranie 6 wadliwych eksportów IV–VI 2025</h3><dl>
+      <dt>Po co</dt><dd>Pełne IV–VIII r/r dla tekstyliów i oświetlenia wewnętrznego oraz 17 miesięcy historii dla kołder, taśm LED, plafonów i ochraniaczy. 5.1 robi to samo zastrzeżenie i również nie uzupełnia luki szacunkiem.</dd>
+      <dt>Gdzie</dt><dd>„Mapa 51 kategorii”, „Historia grup”, sekcja 4.1.</dd></dl></div>
+    <div class="item"><h3><span class="id">D3</span>Eksporty podkategorii</h3><dl>
+      <dt>Po co</dt><dd>Ochraniacze na materac (szeroka lista tekstyliów pokazuje tylko ich część), wąskie podkategorie, które 3.5 już wskazuje (kółka, zawiasy, prowadnice, baterie kuchenne), i kategorie jeszcze niepogłębione (ściany i elewacje, szlifierki, podłogi, ogrodzenia i bramy).</dd>
+      <dt>Gdzie</dt><dd>Sekcje 4.1, 6.2, 8.4.</dd></dl></div>
+    <div class="item"><h3><span class="id">D4</span>Parametry od dostawców</h3><dl>
+      <dt>Po co</dt><dd>Czasy produkcji i transportu, MOQ, koszt serwisu, części, certyfikaty (z P2). Bez nich terminy i opłacalność opierają się na założeniach.</dd>
+      <dt>Gdzie</dt><dd>„Dane od dostawcy”, „Kalkulator kosztu”, „Plan kwartalny”.</dd></dl></div>
+  </div>
+</section>
+
+<section id="metoda">
+  <div class="eyebrow">4 · Metoda</div>
+  <h2>Dziesięć zmian metody</h2>
+  <div class="stack">
+    <div class="item"><h3><span class="id">M1</span>Terminy zamówień liczone wstecz od okna sprzedaży</h3><dl>
+      <dt>Źródło</dt><dd>5.1, sekcja 5: „odejmij czas produkcji, transportu, odprawy, kontroli i uzgodniony bufor”. Nasz test: 36 z 42 terminów sezonowych za późno nawet przy założeniach 3.5.</dd>
+      <dt>Reguła</dt><dd>Towar w magazynie pierwszego dnia miesiąca przed szczytem (okno 5.1: szczyt ±1 miesiąc). Zamówienie najpóźniej = ta data minus produkcja, transport, odprawa i kontrola, bufor. Domyślnie 17 tygodni (5 + 8 + 2 + 2), wariant ostrożny 20 tygodni; przy pierwszym zamówieniu nowego produktu dodatkowo próbki i badania; przy produkcji w I–II dodatkowo przestój w chiński Nowy Rok. Wynik jako konkretna data, nie zakres miesięcy. Grupy całoroczne z co najmniej 28% sprzedaży w jednym kwartale (smart home, taśmy LED, lasery, oprawy LED) dostają drugą falę przed tym kwartałem.</dd>
+      <dt>Gdzie</dt><dd>Sekcja 7 (7.1, 7.3, 7.4), karty grup, sekcja 4.1, arkusz „Plan kwartalny” z czasem dostawy jako parametrem. Nowe daty w tabeli na końcu strony.</dd></dl></div>
+    <div class="item"><h3><span class="id">M2</span>Pewność: trzy poziomy i ocena danych o wzroście</h3><dl>
+      <dt>Źródło</dt><dd>5.1 nie liczy wzrostu bez pełnych okien i ostrzega, że jeden sezon nie potwierdza powtarzalności. U nas osprzęt i zaciskarki zmieniają decyzję w obu wariantach progów, a mają etykietę „średnia”.</dd>
+      <dt>Reguła</dt><dd>Wysoka: decyzja ta sama we wszystkich wariantach progów i wzrost potwierdzony na pełnym oknie (IV–VIII albo pełne miesiące zimowe r/r) lub w dwóch niezależnych oknach. Średnia: decyzja zmienia się w jednym wariancie albo wzrost pochodzi z 30 dni lub 2 miesięcy. Niska: decyzja zmienia się w obu wariantach. Przy pewności opartej na krótkim oknie podać datę potwierdzenia.</dd>
+      <dt>Gdzie</dt><dd>Sekcje 2 i 11, arkusze „Grupy” i „Podsumowanie”. Wynik dla 8 grup w sekcji 5 tej strony.</dd></dl></div>
+    <div class="item"><h3><span class="id">M3</span>Wzrost: zostaje r/r, dochodzi zmiana udziału w kategorii</h3><dl>
+      <dt>Źródło</dt><dd>5.1 liczy wzrost udziału w stałym zakresie. Nasz próg 10% jest niższy niż wzrost rynku (ok. +12%), więc grupa może dostać „tak”, choć rośnie wolniej niż jej kategoria.</dd>
+      <dt>Reguła</dt><dd>Pytanie 2 bez zmian (r/r tych samych miesięcy, próg 10%). Nowa kolumna „zmiana udziału w kategorii IV–VIII” jako ostrzeżenie, gdy grupa rośnie o co najmniej 5 pkt wolniej niż kategoria; z adnotacją, gdy kategorię ciągnie jeden typ (klimatyzacja split, niwelatory). Dla grup zimowych w 4.0 wzrost z IX–X r/r zamiast 30 dni. Okna 2-miesięczne oznaczać w kartach.</dd>
+      <dt>Gdzie</dt><dd>„Grupy”, „Profil 45 grup”, karty grup, nagłówek sekcji 1.</dd></dl></div>
+    <div class="item"><h3><span class="id">M4</span>Indeks konwersji z 5.1</h3><dl>
+      <dt>Źródło</dt><dd>5.1, sekcja 8 i arkusz 21_KONWERSJA. Potwierdza nasze znaki (32 z przewagą, 0 słabszych) i dodaje warunek utrzymania oraz ostrzeżenie.</dd>
+      <dt>Reguła</dt><dd>W każdym miesiącu porównanie z produktami tej samej podkategorii w cenie 0,5–2× (co najmniej 5 innych produktów, każdy z co najmniej 200 odsłonami); odniesienie to mediana ich konwersji. Indeks = suma transakcji / suma transakcji oczekiwanych. Statusy: przewaga utrzymana (12 mies. ≥1,25× przy ≥6 miesiącach, ≥1 000 odsłon, ≥50 transakcji, oraz VI–VIII ≥1,10× przy 3 pełnych miesiącach, ≥500 odsłon, ≥30 transakcji), tylko historyczna, bez przewagi, słabsza (3 mies. &lt;0,80×), brak porównania. Wrażliwość progu 1,10 / 1,25 / 1,50. Nie jest bramką decyzji; służy wyborowi modelu i ostrzeżeniom. Konwersję grupy liczyć jako medianę indeksów produktów zamiast porównania z całą kategorią.</dd>
+      <dt>Gdzie</dt><dd>Karty grup (zdanie o konwersji przy każdym produkcie), sekcja 4.2, „Pula 17M”, „Mało sklepów”, sekcja 2.3.</dd></dl></div>
+    <div class="item"><h3><span class="id">M5</span>Konkurencja: marki importerów i koncentracja sprzedawców</h3><dl>
+      <dt>Źródło</dt><dd>5.1 podaje Top3 marek (z importerami) i Top3 sprzedawców; u nas jest tylko udział dużych marek i HHI całej kategorii z sierpnia.</dd>
+      <dt>Reguła</dt><dd>Lista dużych marek zostaje bramką (jest trafniejsza niż heurystyka 5.1). Dla każdej grupy dochodzą: Top3 marek łącznie z importerami, udział sprzedaży bez rozpoznanej marki i Top3 sprzedawców, liczone z 12 miesięcy albo z miesięcy sezonu, nie z sierpnia, z liczbą produktów obok. To ostrzeżenia, nie bramki.</dd>
+      <dt>Gdzie</dt><dd>„Profil 45 grup” (wymiar „Konkurencja”), karty grup, „Mapa 51 kategorii”.</dd></dl></div>
+    <div class="item"><h3><span class="id">M6</span>Model dostaw jako osobny wymiar decyzji</h3><dl>
+      <dt>Źródło</dt><dd>5.1 oddziela popyt od modelu dostaw i kieruje urządzenia do partnera. W danych sprzedaży nie ma na to dowodów, ale ryzyko serwisowe jest realne.</dd>
+      <dt>Reguła</dt><dd>Każda grupa z sekcji 2 i 5 dostaje model dostaw: fabryka pod naszą marką / sprawdzony producent z serwisem w UE / dystrybutor w Polsce. Dla urządzeń gazowych, spalinowych, z czynnikiem chłodniczym, elektroniki PV i czujników bezpieczeństwa warunek przed pierwszym zamówieniem: partner serwisowy i zapas części w Polsce. Kalkulator dostaje pola: koszt serwisu na sztukę, rezerwa gwarancyjna, miesiące towaru w magazynie przed sezonem.</dd>
+      <dt>Gdzie</dt><dd>Karty grup, sekcja 5, sekcja 10 (warunek „Fabryka”), „Kalkulator kosztu”, „Dane od dostawcy”.</dd></dl></div>
+    <div class="item"><h3><span class="id">M7</span>Produkty w kilku kategoriach</h3><dl>
+      <dt>Źródło</dt><dd>5.1: jedna obserwacja na miesiąc, flaga CHECK_DIFFERENCE przy różnicy powyżej 0,5%. U nas 282 produkty w dwóch kategoriach; wśród wspólnych z 5.1 17 ma różną sprzedaż (np. falownik Deye SUN-15K 0,95 wobec 0,35 mln zł).</dd>
+      <dt>Reguła</dt><dd>Jawna reguła wyboru wartości, flaga przy różnicy powyżej 0,5% i obie wartości w puli. Przy falownikach sprawdzić wpływ reguły na sprzedaż grupy.</dd>
+      <dt>Gdzie</dt><dd>„Pula 17M”, „Pula 17M – metoda”, sekcja 11.2.</dd></dl></div>
+    <div class="item"><h3><span class="id">M8</span>Dwa mianowniki historii</h3><dl>
+      <dt>Źródło</dt><dd>5.1: months_12m i months_seen podawane osobno.</dd>
+      <dt>Reguła</dt><dd>Przy sprzedaży z 12 miesięcy pisać „n z 12 miesięcy w oknie”, obok „n z 17 w historii”.</dd>
+      <dt>Gdzie</dt><dd>Karty grup, „Lista zakupowa”, sekcja 5.</dd></dl></div>
+    <div class="item"><h3><span class="id">M9</span>Szersza analiza wrażliwości</h3><dl>
+      <dt>Źródło</dt><dd>5.1 pokazuje wrażliwość progu konwersji. U nas warianty progów liczymy tylko dla 91 grup.</dd>
+      <dt>Reguła</dt><dd>Warianty łagodniejszy i ostrzejszy także dla typów z sekcji 4.1. Z 7 typów odrzuconych wyłącznie na progu sprzedaży, przy progu 0,35 mln zł do wiersza A przeszłyby 4: ochraniacze, sprzęt budowlany – akcesoria, uszczelki i folie okienne. Próg marek ±5 pkt pokazany dla grup blisko 50% (baterie łazienkowe 49,2%, smart home 46,8%). Wrażliwość progu konwersji.</dd>
+      <dt>Gdzie</dt><dd>Sekcje 4.1 i 11, „Nowe typy – wstępna ocena”.</dd></dl></div>
+    <div class="item"><h3><span class="id">M10</span>Kontrole, rejestr zmian, odtwarzalność</h3><dl>
+      <dt>Źródło</dt><dd>5.1 Evidence Book: 21 kontroli integralności, sumy kontrolne źródeł, rejestr każdej zmiany decyzji z rodzajem dowodu, kod odtwarzający wynik.</dd>
+      <dt>Reguła</dt><dd>Arkusz „Kontrole”: liczba raportów, kategorii i miesięcy, unikalne ID, brak zer za miesiące poza Top100, brak wzrostu z niepełnych okien, sumy kontrolne kluczowych liczb raportu. Arkusz „Rejestr zmian”: grupa, decyzja w 3.5, decyzja w 4.0, rodzaj dowodu (nowe dane, korekta reguły, korekta klasyfikacji). Skrypt, który odtwarza liczby z surowych plików, i lista plików źródłowych.</dd>
+      <dt>Gdzie</dt><dd>Nowe arkusze w pliku Excel, aneks „Dowody i kontrole” w raporcie.</dd></dl></div>
+  </div>
+</section>
+<section id="decyzje">
+  <div class="eyebrow">5 · Decyzje</div>
+  <h2>Decyzje do przeglądu w wersji 4.0</h2>
+  <p class="prose">Dwie pozycje zmieniają rekomendację (przyprawniki, ochraniacze). Pozostałe dostają warunek, inną pewność, nowy termin albo ostrzeżenie. Wyniki są wstępne: ostatecznie rozstrzygną je dane IX–X 2026 i parametry od dostawców.</p>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th style="width:190px">Grupa lub typ</th><th style="width:150px">W 3.5</th><th style="width:220px">Propozycja na 4.0</th><th>Dlaczego i pod jakim warunkiem</th></tr></thead>
+    <tbody>
+      <tr><td>Przyprawniki</td><td>do importu, 6/7, średnia</td><td><span class="chip warn">test małą partią</span></td><td>Wzrost z 30 dni (+70%), na IV–VIII +9,1%, poniżej progu. Konwersja: mediana 0,76×, żaden produkt z przewagą, 3 słabsze i wszystkie trzy w karcie. Powrót do importu, jeśli IX–XI 2026 potwierdzą wzrost, a konwersja da się wyjaśnić ceną lub ofertą.</td></tr>
+      <tr><td>Ochraniacze na materac</td><td>nie teraz, mały rynek</td><td><span class="chip warn">pełny test 7 pytań (4.1 A)</span></td><td>Odpadają o 1 667 zł na progu 500 tys. zł; pozostałe 5 odpowiedzi „tak”; udział w Top100 tekstyliów rośnie z 1,3% (XII 2025) do 14,5% (VII 2026). Najpierw eksport podkategorii; wzrost +69% pochodzi tylko z 2 miesięcy.</td></tr>
+      <tr><td>Czujniki czadu i dymu</td><td>pełny test; spot z certyfikatem</td><td>pełny test bez zmian; spot tylko od dystrybutora z certyfikatem; model dostaw: partner</td><td>Pełny test dopiero po I 2027, a zamówienie spot do 25.10.2026. Produkt ratujący życie; 5.1: „bez kompromisu jakościowego”.</td></tr>
+      <tr><td>Grzejniki elektryczne, piecyki na butlę</td><td>do importu, 7/7, wysoka</td><td>do importu warunkowo, pewność średnia</td><td>Przechodzą tylko na oknie 30 dni (+58,8%); IV–VIII +1,9% (poza sezonem). Potwierdzić na IX–XI 2026 r/r. Za mało pełnych porównań konwersji. Warunek serwisowy dla piecyków gazowych.</td></tr>
+      <tr><td>Nagrzewnice</td><td>do importu, 7/7, wysoka, priorytet nr 1</td><td>bez zmian; warunek serwisowy dla gazowych; punkt kontrolny XII 2026 – I 2027</td><td>Próg przechodzą w obu oknach (30 dni +27%, IV–VIII +12%), sierpień r/r w 5.1 +22,7%. 5.1 kieruje je do partnera przez korektę klasyfikacji, nie przez dane. Termin V–VI 2027 jest bezpieczny (najpóźniej ok. 4.08.2027).</td></tr>
+      <tr><td>Agregaty prądotwórcze</td><td>do importu, 6/7, wysoka</td><td>bez zmian; warunek serwisowy</td><td>Konwersja wspiera (9 z przewagą, 3 słabsze, mediana 1,33×). 5.1: klasa logistyczna REGULATED. Warunek: Stage V, części, test hałasu, partner serwisowy w Polsce.</td></tr>
+      <tr><td>Wentylatory</td><td>do importu, 7/7, wysoka</td><td>bez zmian; zamówienie do ok. 2.01.2027; wybór modeli według konwersji</td><td>Zamówienie na końcu „I–II 2027” dociera przy 16 tygodniach po 42% rocznej sprzedaży. Konwersja: mediana 0,89× przy pełnym porównaniu tylko 11 z 45 produktów, szybka wymiana modeli; w briefie modele z przewagą (np. wentylator HRX 50 cm, 1,37×).</td></tr>
+      <tr><td>Klimatyzatory przenośne</td><td>do importu, 6/7, wysoka</td><td>bez zmian; zamówienie do ok. 2.01.2027</td><td>Czerwiec to 74% roku; zamówienie na końcu „I–II 2027” dociera po 55% sprzedaży. Rosną wolniej niż kategoria, ale kategorię ciągnie klimatyzacja split (+206%).</td></tr>
+      <tr><td>Pompy ogrodowe i hydrofory</td><td>do importu, 6/7, wysoka</td><td>do importu, pewność średnia</td><td>Rosną o 8,5 pkt wolniej niż nawadnianie; konwersja mieszana (4 z przewagą, 4 słabsze). Hydrofory Einbach z karty mają słabszą konwersję; wzór: pompa głębinowa Magnum 3200 W (1,25× / 1,33×).</td></tr>
+      <tr><td>Baterie łazienkowe</td><td>do importu, 6/7, średnia</td><td>do importu z wariantem progu marek ±5 pkt</td><td>Duże marki 49,2% przy progu 50%; tracą 7,2 pkt udziału w kategorii; konwersja wspiera (5 i 1). Jeśli przy progu 45% grupa wypada, test małą partią. 5.1 kieruje 13 z 18 wspólnych produktów do partnera.</td></tr>
+      <tr><td>Kołdry i poduszki</td><td>do importu, 6/7, wysoka</td><td>do importu, pewność średnia; potwierdzenie na XI 2026</td><td>Wzrost tylko z VII–VIII (14% roku), a VII 2025 to najniższy miesiąc grupy. Konwersja wspiera (4 i 0).</td></tr>
+      <tr><td>Taśmy LED</td><td>do importu, 6/7, średnia</td><td>bez zmian; wzrost z VIII i IX–X r/r; sprawdzić sprzedawców</td><td>„+124%” to VII–VIII od najniższego miesiąca po luce w danych; sam sierpień +44%. Top3 sprzedawców 78%, ale na 5 produktach.</td></tr>
+      <tr><td>Oprawy LED i plafony</td><td>test, 5/7, średnia</td><td>test; pierwszy kandydat do awansu</td><td>Konwersja wspiera (8 z przewagą, 4 słabsze, mediana 1,09×), 20 z 27 wspólnych produktów 5.1 daje „do wyceny”. Awans, jeśli IX–X potwierdzą wzrost ≥10% (IV–VIII +7,3%).</td></tr>
+      <tr><td>Osprzęt do elektronarzędzi, zaciskarki</td><td>test, średnia</td><td>test, pewność niska</td><td>Zmieniają decyzję w obu wariantach progów, a etykieta „średnia” oznacza zmianę w jednym.</td></tr>
+      <tr><td>Falowniki i magazyny energii, akcesoria PV</td><td>test</td><td>test; akcesoria PV jako realna szansa w „energii domu”</td><td>88% sprzedaży grupy falowników pochodzi z fotowoltaiki dla firm (+73%), domowa rośnie o 19%; Deye ma co najmniej 20% zakresu, 43 z 62 produktów 5.1 kieruje do partnera. Morski termin na wiosnę 2027 minął (P3).</td></tr>
+      <tr><td>Moskitiery</td><td>4.1 A, pierwsze w kolejce</td><td>pełny test jako pierwszy; zamówienie do ok. 2.01.2027</td><td>Lider ma przewagę 1,37× / 1,20×, ale w typie są też 3 słabsze produkty, a wzrost +11% jest tuż nad progiem. Brief na podstawie trzech produktów z przewagą (dlaokna 140×140, naokienko, aluminiowa na metry 149×149).</td></tr>
+      <tr><td>Rekuperatory</td><td>nie teraz</td><td>bez zmian; nowe uzasadnienie i kierunek partnerski</td><td>Średnią cenę „ok. 1 900 zł” zawyża jeden model (ok. 6 650 zł); 92% sprzedaży to modele ścienne za 560–1 100 zł; BSK ZEPHYR 110 sprzedał 2,45 mln zł. Powody, które zostają: 7 produktów w Top100, brak drugiego źródła, montaż i serwis.</td></tr>
+      <tr><td>Lampy solarne i girlandy, wieszaki</td><td>do importu, wysoka</td><td>bez zmian; ostrzeżenie o koncentracji</td><td>Top3 sprzedawców 76% (30 produktów) i 60% (20 produktów); Smartled ma co najmniej 14% oświetlenia ogrodowego. Wieszaki zyskują udział (+24 pkt), konwersja wspiera.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="margin-top:10px">Pewność grup do importu, których wzrost nie pochodzi z pełnego IV–VIII</h3>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th>Grupa</th><th>Okno w 3.5</th><th class="n">Wzrost w tym oknie</th><th class="n">Wzrost IV–VIII</th><th class="n">IV–VIII w roku</th><th>Pewność 3.5</th><th>Pewność 4.0</th></tr></thead>
+    <tbody>
+      <tr><td>Nagrzewnice</td><td>30 dni</td><td class="n">+27,1%</td><td class="n">+12,1%</td><td class="n">7%</td><td>wysoka</td><td>wysoka (oba okna), kontrola XII–I</td></tr>
+      <tr><td>Grzejniki, piecyki na butlę</td><td>30 dni</td><td class="n">+58,8%</td><td class="n">+1,9%</td><td class="n">8%</td><td>wysoka</td><td>średnia, potwierdzić IX–XI</td></tr>
+      <tr><td>Agregaty</td><td>30 dni</td><td class="n">+41,5%</td><td class="n">+24,0%</td><td class="n">27%</td><td>wysoka</td><td>wysoka (oba okna)</td></tr>
+      <tr><td>Naświetlacze LED</td><td>30 dni</td><td class="n">+25,9%</td><td class="n">+11,9%</td><td class="n">26%</td><td>wysoka</td><td>wysoka (oba okna)</td></tr>
+      <tr><td>Kołdry i poduszki</td><td>VII–VIII</td><td class="n">+23,9%</td><td class="n">brak danych</td><td class="n">–</td><td>wysoka</td><td>średnia, potwierdzić XI</td></tr>
+      <tr><td>Taśmy LED</td><td>VII–VIII</td><td class="n">+124,0%</td><td class="n">brak danych</td><td class="n">–</td><td>średnia</td><td>średnia</td></tr>
+      <tr><td>Kółka do mebli</td><td>30 dni</td><td class="n">+17,1%</td><td class="n">brak historii</td><td class="n">–</td><td>średnia</td><td>średnia</td></tr>
+      <tr><td>Przyprawniki</td><td>30 dni</td><td class="n">+70,3%</td><td class="n">+9,1%</td><td class="n">30%</td><td>średnia</td><td>średnia, decyzja: test</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3 style="margin-top:10px">Wzrost grup na tle ich kategorii (IV–VIII 2026 r/r, punkty procentowe)</h3>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th>Grupa</th><th>Decyzja 3.5</th><th class="n">Grupa</th><th class="n">Kategoria</th><th class="n">Różnica</th><th>Uwaga</th></tr></thead>
+    <tbody>
+      <tr><td>Akcesoria do fotowoltaiki</td><td>test</td><td class="n">+36,0%</td><td class="n">+50–66%</td><td class="n">−14 do −30</td><td>mieszanka PV dla firm (+73%) i domowej (+19%)</td></tr>
+      <tr><td>Osprzęt wentylacji</td><td>import</td><td class="n">+68,4%</td><td class="n">+95,2%</td><td class="n">−26,9</td><td>kategorię ciągnie klimatyzacja split</td></tr>
+      <tr><td>Zawory i reduktory</td><td>test</td><td class="n">−8,2%</td><td class="n">+13,6%</td><td class="n">−21,8</td><td>już „nie” w pytaniu o wzrost</td></tr>
+      <tr><td>Węże ogrodowe</td><td>test</td><td class="n">+5,5%</td><td class="n">+23,6%</td><td class="n">−18,2</td><td>już „nie” w pytaniu o wzrost</td></tr>
+      <tr><td>Klimatyzatory przenośne</td><td>import</td><td class="n">+77,7%</td><td class="n">+95,2%</td><td class="n">−17,5</td><td>kategorię ciągnie klimatyzacja split</td></tr>
+      <tr><td>Lasery krzyżowe</td><td>test</td><td class="n">+1,6%</td><td class="n">+18,4%</td><td class="n">−16,8</td><td>kategorię zawyżają niwelatory dodane w III 2026</td></tr>
+      <tr><td>Pompy ogrodowe i hydrofory</td><td>import</td><td class="n">+15,1%</td><td class="n">+23,6%</td><td class="n">−8,5</td><td>wiarygodny sygnał utraty udziału</td></tr>
+      <tr><td>Baterie łazienkowe</td><td>import</td><td class="n">+14,5%</td><td class="n">+21,7%</td><td class="n">−7,2</td><td>wiarygodny sygnał; wobec całej łazienki (+11,8%) grupa zyskuje</td></tr>
+      <tr><td>Lampy solarne i girlandy</td><td>import</td><td class="n">+32,5%</td><td class="n">+18,0%</td><td class="n">+14,5</td><td>zyskuje udział</td></tr>
+      <tr><td>Wieszaki</td><td>import</td><td class="n">+29,4%</td><td class="n">+5,1%</td><td class="n">+24,2</td><td>zyskuje udział</td></tr>
+      <tr><td>Parasole ogrodowe</td><td>import</td><td class="n">+52,9%</td><td class="n">−4,1%</td><td class="n">+57,0</td><td>zyskuje udział</td></tr>
+      <tr><td>Szklane pojemniki</td><td>test</td><td class="n">+78,7%</td><td class="n">+20,2%</td><td class="n">+58,5</td><td>zyskuje udział</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Grupy obejmujące całą kategorię (wentylatory, smart home, oprawy LED) mają wzrost równy kategorii i nie są w tabeli.</p>
+</section>
+<section id="tezy">
+  <div class="eyebrow">6 · Tezy i treść</div>
+  <h2>Co przepisać w tekście raportu</h2>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th style="width:60px">Nr</th><th style="width:210px">Miejsce w 3.5</th><th>Zmiana</th></tr></thead>
+    <tbody>
+      <tr><td>T1</td><td>Sekcja 1, kafel „44 z 51”; sekcja 9</td><td>„Rośnie 42 z 48 kategorii z pełnym porównaniem IV–VIII (raport 5.1: 41 z 47)”; zaznaczyć, że kategorie się nakładają, a w 10 zmiana mieści się w ±5%.</td></tr>
+      <tr><td>T2</td><td>Sekcja 1 „Wygrywają marki importerów”, sekcje 2.3 i 9</td><td>Zostawić fakt, że duże marki mają mniej niż 20% w 15 z 18 grup, i dopisać, że Mar-Pol, Smartled, Masterled i EBERG to konkurenci do pokonania (co najmniej 13–16% swoich kategorii), a nie dowód wolnego rynku.</td></tr>
+      <tr><td>T3</td><td>Sekcja 9 „Największa szansa: energia domu”</td><td>Rozdzielić fotowoltaikę dla firm (+73%) i domową (+19%); +136% opisuje wybrany podzbiór falowników. Jako szansę importu wskazać akcesoria PV (profile, przewody, złącza).</td></tr>
+      <tr><td>T4</td><td>Sekcja 2.3 „klienci kupują rzadziej… lepsza oferta może przejąć sprzedaż”</td><td>Przeformułować na hipotezę do sprawdzenia w teście. Porównanie z całą kategorią w miesiącu szczytu miesza ceny; zastąpić medianą indeksu konwersji produktów grupy (M4).</td></tr>
+      <tr><td>T5</td><td>Sekcja 3 „drugi, niezależny filtr”</td><td>„Drugi filtr, sam popyt, liczony z tych samych danych Top100”. Niezależnym potwierdzeniem jest tylko pytanie 7 (OBI).</td></tr>
+      <tr><td>T6</td><td>Sekcja 4.2 „Dobra sprzedaż, mało sklepów”</td><td>Nazwać listę „do sprawdzenia”: mało ofert jednego modelu nie oznacza małej liczby substytutów. Dodać filtry: wzrost r/r, konwersja (M4), koncentracja marek i sprzedawców (M5). W 5.1 żaden z 15 podobnych tropów nie przeszedł wszystkich filtrów.</td></tr>
+      <tr><td>T7</td><td>„Mapa 51 kategorii”</td><td>Obok szczytu z 17 miesięcy pokazać szczyt z ostatnich 12 (różni się w grillach i meblach ogrodowych); HHI sprzedawców liczyć z sezonu albo 12 miesięcy; kategorie, w których sierpień to mniej niż 10% roku, oznaczyć jako pomiar poza sezonem.</td></tr>
+      <tr><td>T8</td><td>Sekcja 10 „Czego raport nie rozstrzyga”</td><td>Dopisać: czasy produkcji i transportu to założenia, nie dane; elektryka i narzędzia ogrodnicze (125 produktów, 175 mln zł, m.in. kosy, czujniki, wertykulatory, dmuchawy) nie mają potwierdzenia w żadnym drugim raporcie.</td></tr>
+      <tr><td>T9</td><td>Sekcja 3.5 Healthy Home</td><td>Rekuperatory: nowe uzasadnienie (patrz decyzje). Zmiękczacze: dopisać, że 5.1 kieruje wszystkie do partnera, a test wymaga serwisu w Polsce.</td></tr>
+      <tr><td>T10</td><td>Sekcja 1, rekomendacja o kalendarzu; sekcja 7</td><td>Nowe daty z metody M1 i zdanie: „Terminy liczymy wstecz od początku okna sprzedaży; czasy dostawy potwierdzamy z dostawcą”.</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="prezentacja">
+  <div class="eyebrow">7 · Prezentacja</div>
+  <h2>Co zmienić w formie</h2>
+  <div class="stack">
+    <div class="item"><h3><span class="id">R1</span>ID Allegro przy każdym produkcie</h3><dl><dt>Dlaczego</dt><dd>W puli 39 nazw powtarza się w 81 wierszach. „Poduszka do spania Softimi 70 x 80 cm” to dwa produkty: 1,10 mln zł (w 5.1 „do sprawdzenia”) i 0,60 mln zł (w 5.1 „do wyceny”). Dotyczy kart grup, „Listy zakupowej” i listy spot.</dd></dl></div>
+    <div class="item"><h3><span class="id">R2</span>Tabela „co oznacza i czego nie oznacza”</h3><dl><dt>Wzór</dt><dd>5.1, sekcja 0: dla każdej decyzji i oznaczenia (sprzedaż 12 mies. i n/12, historia n/17, Top20 w kategorii, „do importu”, „przewaga konwersji”) jedno zdanie, czego nie wolno z niego wnioskować.</dd></dl></div>
+    <div class="item"><h3><span class="id">R3</span>Lista kontrolna przed rozmową z dostawcą na początku raportu</h3><dl><dt>Wzór</dt><dd>5.1 „Pięć pytań przed pracą z dostawcami” połączone z naszymi czterema warunkami (dane, fabryka, pieniądze, skala) i nowym warunkiem modelu dostaw.</dd></dl></div>
+    <div class="item"><h3><span class="id">R4</span>Zdanie o konwersji przy produkcie</h3><dl><dt>Wzór</dt><dd>„Konwersja: przewaga utrzymana, 1,37× / 1,20×” albo „słabsza: wyjaśnić przed zapytaniem” albo „brak pełnego porównania”. 24 produkty z obecnych kart dostają ostrzeżenie; 36 kandydatów z przewagą może zastąpić słabsze wzory.</dd></dl></div>
+    <div class="item"><h3><span class="id">R5</span>Rejestr wyboru przykładów</h3><dl><dt>Wzór</dt><dd>5.1 executive_selection: dla każdego produktu w karcie ID, kryterium (lider 12 mies., lider sierpnia, przewaga konwersji) i wartość. Bez stałego limitu liczby przykładów.</dd></dl></div>
+    <div class="item"><h3><span class="id">R6</span>Specyfikacje z 5.1 dla kierunków bez naszego briefu</h3><dl><dt>Zakres</dt><dd>Moskitiery, odpływy liniowe, zraszacze i nawadnianie, mierniki wilgoci i wkłady, profile PV, akcesoria ogniskowe, części basenowe, segregacja odpadów, ochraniacze na materac, rekuperatory ścienne.</dd></dl></div>
+    <div class="item"><h3><span class="id">R7</span>Aneks „Dowody i kontrole”</h3><dl><dt>Wzór</dt><dd>5.1 Evidence Book: źródła i ich liczby, kontrole (M10), rejestr zmian decyzji 3.5 → 4.0, ograniczenia, opis skryptu odtwarzającego.</dd></dl></div>
+    <div class="item"><h3><span class="id">R8</span>Arkusz „Porównanie z v5.1”</h3><dl><dt>Zakres</dt><dd>Zamiast porównania z v4.4 (73 przykłady): wszystkie 1 796 wspólnych produktów po ID, z kwalifikacją i konwersją 5.1. Do puli dopisać 9 produktów z 5.1 z utrzymaną przewagą konwersji, których dziś nie mamy (m.in. moskitiera BROS 130×150, materac Heisberg 140×200).</dd></dl></div>
+    <div class="item"><h3><span class="id">R9</span>Co zostaje bez zmian</h3><dl><dt>Zakres</dt><dd>Karty grup z decyzją w języku zakupów, wykresy, mapa okazji, kalendarz (z nowymi datami), spot, kalkulator kosztu, formularz dostawcy, sekcje OBI i marketplace. To przewaga 3.5 nad 5.1.</dd></dl></div>
+  </div>
+</section>
+
+<section id="nie">
+  <div class="eyebrow">8 · Czego nie brać z 5.1</div>
+  <h2>Elementy 5.1, które pogorszyłyby raport</h2>
+  <div class="cols">
+    <div class="box"><ul>
+      <li>Sygnał „rosnąca sprzedaż” VI–VIII wobec III–V: to w dużej części sezon; z 468 produktów z tym sygnałem 72 z 290 porównywalnych sprzedaje mniej niż rok wcześniej.</li>
+      <li>Rozpoznawanie marek z tytułów jako bramka: 384 kandydatów z „Top3 marek” 100%, m.in. regały z 24 markami.</li>
+      <li>„Nowy sygnał” jako pierwsza obserwacja w VI–VIII: 1 147 produktów, sama 5.1 pisze, że to nie premiery.</li>
+    </ul></div>
+    <div class="box"><ul>
+      <li>Automatyczne kierowanie urządzeń do partnera według klasy logistycznej; zamiast tego wymiar modelu dostaw z warunkiem serwisowym (M6).</li>
+      <li>Okno sezonu całego zakresu zamiast szczytu grupy lub typu.</li>
+      <li>Rezygnacja z dat zakupu: daty zostają, tylko liczone uczciwiej (M1).</li>
+      <li>Setki kart produktów z tym samym tekstem następnego kroku i brak agregacji do decyzji zakupowej.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="harmonogram">
+  <div class="eyebrow">9 · Harmonogram</div>
+  <h2>Kolejność prac i kryteria gotowości</h2>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th style="width:170px">Kiedy</th><th>Co</th><th style="width:300px">Gotowe, gdy</th></tr></thead>
+    <tbody>
+      <tr><td>do 25.10.2026</td><td>P1: decyzja o spocie, czujniki tylko od dystrybutora z certyfikatem</td><td>Zamówienia spot złożone albo świadomie odwołane</td></tr>
+      <tr><td>do 4.11.2026</td><td>P2, P3: dane z targów Canton; decyzja kolej / część sezonu / 2028 dla grup z sezonem od lutego</td><td>Dla każdej grupy do importu i testu: czas produkcji, transportu i MOQ od co najmniej 2 dostawców</td></tr>
+      <tr><td>do 8.11.2026</td><td>P4, D1–D3: dane IX–X 2026, naprawione pliki, eksporty podkategorii</td><td>Arkusz „Kontrole” bez błędów na nowym panelu</td></tr>
+      <tr><td>do 15.11.2026</td><td>M1–M10, decyzje, tezy, prezentacja; wydanie wersji 4.0</td><td>Każda zmiana decyzji w rejestrze zmian; każdy termin z parametrami; każdy produkt z ID</td></tr>
+      <tr><td>XII 2026</td><td>Zamówienia na lato 2027 (wentylatory, klimatyzatory, parasole, moskitiery, pompy)</td><td>Złożone przed ok. 2.01.2027 (17 tyg.) albo 12.12.2026 (20 tyg.)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="terminy">
+  <div class="eyebrow">10 · Tabela terminów</div>
+  <h2>Nowe terminy zamówień dla pozycji sezonowych</h2>
+  <p class="prose">Towar w magazynie pierwszego dnia miesiąca przed najlepszym miesiącem. Najpóźniejsze zamówienie przy 17 tygodniach (5 produkcja, 8 morze, 2 odprawa i kontrola, 2 bufor) i w wariancie ostrożnym przy 20 tygodniach. Ocena porównuje koniec terminu z 3.5 z datą przy 17 tygodniach. Przy pierwszym zamówieniu nowego produktu trzeba jeszcze doliczyć próbki i badania. Grupy całoroczne nie są w tabeli: zamawiamy je „na start”, a te z co najmniej 28% sprzedaży w jednym kwartale dostają drugą falę przed nim.</p>
+  <div class="tbl"><table class="wide">
+    <thead><tr><th>Pozycja</th><th>Sekcja 3.5</th><th class="n">Termin w 3.5</th><th class="n">Najlepszy miesiąc</th><th class="n">Towar od</th><th class="n">Zamówienie najpóźniej (17 tyg.)</th><th class="n">Ostrożnie (20 tyg.)</th><th>Termin z 3.5</th></tr></thead>
+    <tbody><tr><td>piły łańcuchowe</td><td>2 · test</td><td class='n'>X–XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>wertykulatory</td><td>2 · test</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>tunele foliowe</td><td>4.1 A · pełny test</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>nożyce i sekatory</td><td>4.1 A · pełny test</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>szklarnie</td><td>4.1 B · wycena transportu</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>glebogryzarki</td><td>4.1 B · wycena transportu</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>panele fotowoltaiczne</td><td>5 · wycena</td><td class='n'>XI 2026</td><td class='n'>III 2026</td><td class='n'>01.02.2027</td><td class='n'><b>05.10.2026</b></td><td class='n'>14.09.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>czujniki czadu i dymu (detektory)</td><td>4.1 A · pełny test</td><td class='n'>IX 2027</td><td class='n'>I 2026</td><td class='n'>01.12.2027</td><td class='n'><b>04.08.2027</b></td><td class='n'>14.07.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>grille gazowe</td><td>2 · test</td><td class='n'>XI–XII 2026</td><td class='n'>IV 2026</td><td class='n'>01.03.2027</td><td class='n'><b>02.11.2026</b></td><td class='n'>12.10.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>grille węglowe</td><td>2 · test</td><td class='n'>XI–XII 2026</td><td class='n'>IV 2026</td><td class='n'>01.03.2027</td><td class='n'><b>02.11.2026</b></td><td class='n'>12.10.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>paleniska</td><td>2 · test</td><td class='n'>XI–XII 2026</td><td class='n'>IV 2026</td><td class='n'>01.03.2027</td><td class='n'><b>02.11.2026</b></td><td class='n'>12.10.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>węże ogrodowe</td><td>2 · test</td><td class='n'>XI 2026–I 2027</td><td class='n'>V 2026</td><td class='n'>01.04.2027</td><td class='n'><b>03.12.2026</b></td><td class='n'>12.11.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>kosy i podkaszarki</td><td>4.1 A · pełny test</td><td class='n'>I 2027</td><td class='n'>V 2026</td><td class='n'>01.04.2027</td><td class='n'><b>03.12.2026</b></td><td class='n'>12.11.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>obrzeża</td><td>4.1 B · wycena transportu</td><td class='n'>I 2027</td><td class='n'>V 2026</td><td class='n'>01.04.2027</td><td class='n'><b>03.12.2026</b></td><td class='n'>12.11.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>fotele wiszące</td><td>4.1 B · wycena transportu</td><td class='n'>I 2027</td><td class='n'>V 2026</td><td class='n'>01.04.2027</td><td class='n'><b>03.12.2026</b></td><td class='n'>12.11.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>domki dla dzieci</td><td>4.1 B · wycena transportu</td><td class='n'>I 2027</td><td class='n'>V 2026</td><td class='n'>01.04.2027</td><td class='n'><b>03.12.2026</b></td><td class='n'>12.11.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>wentylatory</td><td>2 · import</td><td class='n'>I–II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>klimatyzatory przenośne</td><td>2 · import</td><td class='n'>I–II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>parasole ogrodowe</td><td>2 · import</td><td class='n'>XII 2026–I 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>moskitiery</td><td>4.1 A · pełny test</td><td class='n'>II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>rolety dachowe</td><td>4.1 A · pełny test</td><td class='n'>II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>pokrywy i plandeki basenowe</td><td>4.1 A · pełny test</td><td class='n'>II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>klimatyzatory split</td><td>5 · wycena</td><td class='n'>II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>markizy</td><td>4.1 B · wycena transportu</td><td class='n'>II 2027</td><td class='n'>VI 2026</td><td class='n'>01.05.2027</td><td class='n'><b>02.01.2027</b></td><td class='n'>12.12.2026</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>słoiki do przetworów i zakrętki</td><td>5 · wycena</td><td class='n'>III 2027</td><td class='n'>VII 2026</td><td class='n'>01.06.2027</td><td class='n'><b>02.02.2027</b></td><td class='n'>12.01.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>grzejniki stalowe panelowe</td><td>4.1 B · wycena transportu</td><td class='n'>IV 2027</td><td class='n'>VIII 2026</td><td class='n'>01.07.2027</td><td class='n'><b>04.03.2027</b></td><td class='n'>11.02.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>dmuchawy do liści</td><td>2 · test</td><td class='n'>V–VI 2027</td><td class='n'>X 2025</td><td class='n'>01.09.2027</td><td class='n'><b>05.05.2027</b></td><td class='n'>14.04.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>piece wolnostojące</td><td>5 · wycena</td><td class='n'>VI 2027</td><td class='n'>X 2025</td><td class='n'>01.09.2027</td><td class='n'><b>05.05.2027</b></td><td class='n'>14.04.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>pochłaniacze wilgoci</td><td>4.1 D · test warunkowo</td><td class='n'>VII 2027</td><td class='n'>XI 2025</td><td class='n'>01.10.2027</td><td class='n'><b>04.06.2027</b></td><td class='n'>14.05.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>wanny</td><td>4.1 B · wycena transportu</td><td class='n'>VII 2027</td><td class='n'>XI 2025</td><td class='n'>01.10.2027</td><td class='n'><b>04.06.2027</b></td><td class='n'>14.05.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>lampki świąteczne</td><td>2 · test</td><td class='n'>VI–VII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>bidony i lunchboxy</td><td>2 · test</td><td class='n'>V–VI 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip neu'>na granicy</span></td></tr>
+<tr><td>choinki</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>komplety pościeli</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>zasłony gotowe</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>lampki biurkowe</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>bombki i ozdoby choinkowe</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>szkatułki i kuferki</td><td>4.1 A · pełny test</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>stojaki na choinkę</td><td>8.5 · trop z danych OBI</td><td class='n'>VIII 2027</td><td class='n'>XII 2025</td><td class='n'>01.11.2027</td><td class='n'><b>05.07.2027</b></td><td class='n'>14.06.2027</td><td><span class='chip warn'>za późno</span></td></tr>
+<tr><td>nagrzewnice</td><td>2 · import</td><td class='n'>V–VI 2027</td><td class='n'>I 2026</td><td class='n'>01.12.2027</td><td class='n'><b>04.08.2027</b></td><td class='n'>14.07.2027</td><td><span class='chip ok'>w porządku</span></td></tr>
+<tr><td>grzejniki i piecyki na butlę</td><td>2 · import</td><td class='n'>V–VI 2027</td><td class='n'>I 2026</td><td class='n'>01.12.2027</td><td class='n'><b>04.08.2027</b></td><td class='n'>14.07.2027</td><td><span class='chip ok'>w porządku</span></td></tr>
+<tr><td>akcesoria kominkowe</td><td>2 · test</td><td class='n'>IV–V 2027</td><td class='n'>I 2026</td><td class='n'>01.12.2027</td><td class='n'><b>04.08.2027</b></td><td class='n'>14.07.2027</td><td><span class='chip ok'>w porządku</span></td></tr></tbody>
+  </table></div>
+  <p class="note">Dla pozycji z najlepszym miesiącem w I kwartale (piły łańcuchowe, wertykulatory, tunele, nożyce, szklarnie, glebogryzarki, panele PV) tabela pokazuje sezon 2027, którego morski termin już minął (P3). Dla świątecznych i zimowych pokazuje sezon 2027/28.</p>
+  <p class="note">Źródła: Radar importu z Chin v3.5 (raport i plik danych), Radar Allegro DIY v5.1 (Executive, Evidence Book, Product Master), analiza porównawcza obu raportów. Stan danych: Allegro Top100 IV 2025 – VIII 2026.</p>
+</section>
+</div>

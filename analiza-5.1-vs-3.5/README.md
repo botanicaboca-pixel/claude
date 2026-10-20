@@ -1,5 +1,8 @@
 # Raport zewnętrzny 5.1 wobec Radaru 3.5
 
+- `raport-5.1-vs-3.5.html` – analiza porównawcza (po ponownej ocenie wniosków).
+- `plan-radaru-4.0.html` – ostateczna lista zmian do wersji 4.0: pilne decyzje, dane, 10 zmian metody, 18 pozycji decyzyjnych, tezy, prezentacja, harmonogram i nowe terminy zamówień.
+
 `raport-5.1-vs-3.5.html` porównuje raport zewnętrzny „Radar Allegro DIY v5.1”
 (Executive, Evidence Book, Product Master) z naszym „Radarem importu z Chin v3.5”
 (raport HTML i plik danych). Raport opisuje, co z 5.1 wspiera, co podważa i co warto
